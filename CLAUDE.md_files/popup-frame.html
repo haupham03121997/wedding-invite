@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<!-- saved from url=(0094)chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/popup-frame.html?injected-frame=true -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style type="text/css">.swal-icon--error{border-color:#f27474;-webkit-animation:animateErrorIcon .5s;animation:animateErrorIcon .5s}.swal-icon--error__x-mark{position:relative;display:block;-webkit-animation:animateXMark .5s;animation:animateXMark .5s}.swal-icon--error__line{position:absolute;height:5px;width:47px;background-color:#f27474;display:block;top:37px;border-radius:2px}.swal-icon--error__line--left{-webkit-transform:rotate(45deg);transform:rotate(45deg);left:17px}.swal-icon--error__line--right{-webkit-transform:rotate(-45deg);transform:rotate(-45deg);right:16px}@-webkit-keyframes animateErrorIcon{0%{-webkit-transform:rotateX(100deg);transform:rotateX(100deg);opacity:0}to{-webkit-transform:rotateX(0deg);transform:rotateX(0deg);opacity:1}}@keyframes animateErrorIcon{0%{-webkit-transform:rotateX(100deg);transform:rotateX(100deg);opacity:0}to{-webkit-transform:rotateX(0deg);transform:rotateX(0deg);opacity:1}}@-webkit-keyframes animateXMark{0%{-webkit-transform:scale(.4);transform:scale(.4);margin-top:26px;opacity:0}50%{-webkit-transform:scale(.4);transform:scale(.4);margin-top:26px;opacity:0}80%{-webkit-transform:scale(1.15);transform:scale(1.15);margin-top:-6px}to{-webkit-transform:scale(1);transform:scale(1);margin-top:0;opacity:1}}@keyframes animateXMark{0%{-webkit-transform:scale(.4);transform:scale(.4);margin-top:26px;opacity:0}50%{-webkit-transform:scale(.4);transform:scale(.4);margin-top:26px;opacity:0}80%{-webkit-transform:scale(1.15);transform:scale(1.15);margin-top:-6px}to{-webkit-transform:scale(1);transform:scale(1);margin-top:0;opacity:1}}.swal-icon--warning{border-color:#f8bb86;-webkit-animation:pulseWarning .75s infinite alternate;animation:pulseWarning .75s infinite alternate}.swal-icon--warning__body{width:5px;height:47px;top:10px;border-radius:2px;margin-left:-2px}.swal-icon--warning__body,.swal-icon--warning__dot{position:absolute;left:50%;background-color:#f8bb86}.swal-icon--warning__dot{width:7px;height:7px;border-radius:50%;margin-left:-4px;bottom:-11px}@-webkit-keyframes pulseWarning{0%{border-color:#f8d486}to{border-color:#f8bb86}}@keyframes pulseWarning{0%{border-color:#f8d486}to{border-color:#f8bb86}}.swal-icon--success{border-color:#a5dc86}.swal-icon--success:after,.swal-icon--success:before{content:"";border-radius:50%;position:absolute;width:60px;height:120px;background:#fff;-webkit-transform:rotate(45deg);transform:rotate(45deg)}.swal-icon--success:before{border-radius:120px 0 0 120px;top:-7px;left:-33px;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);-webkit-transform-origin:60px 60px;transform-origin:60px 60px}.swal-icon--success:after{border-radius:0 120px 120px 0;top:-11px;left:30px;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);-webkit-transform-origin:0 60px;transform-origin:0 60px;-webkit-animation:rotatePlaceholder 4.25s ease-in;animation:rotatePlaceholder 4.25s ease-in}.swal-icon--success__ring{width:80px;height:80px;border:4px solid hsla(98,55%,69%,.2);border-radius:50%;box-sizing:content-box;position:absolute;left:-4px;top:-4px;z-index:2}.swal-icon--success__hide-corners{width:5px;height:90px;background-color:#fff;padding:1px;position:absolute;left:28px;top:8px;z-index:1;-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}.swal-icon--success__line{height:5px;background-color:#a5dc86;display:block;border-radius:2px;position:absolute;z-index:2}.swal-icon--success__line--tip{width:25px;left:14px;top:46px;-webkit-transform:rotate(45deg);transform:rotate(45deg);-webkit-animation:animateSuccessTip .75s;animation:animateSuccessTip .75s}.swal-icon--success__line--long{width:47px;right:8px;top:38px;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);-webkit-animation:animateSuccessLong .75s;animation:animateSuccessLong .75s}@-webkit-keyframes rotatePlaceholder{0%{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}5%{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}12%{-webkit-transform:rotate(-405deg);transform:rotate(-405deg)}to{-webkit-transform:rotate(-405deg);transform:rotate(-405deg)}}@keyframes rotatePlaceholder{0%{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}5%{-webkit-transform:rotate(-45deg);transform:rotate(-45deg)}12%{-webkit-transform:rotate(-405deg);transform:rotate(-405deg)}to{-webkit-transform:rotate(-405deg);transform:rotate(-405deg)}}@-webkit-keyframes animateSuccessTip{0%{width:0;left:1px;top:19px}54%{width:0;left:1px;top:19px}70%{width:50px;left:-8px;top:37px}84%{width:17px;left:21px;top:48px}to{width:25px;left:14px;top:45px}}@keyframes animateSuccessTip{0%{width:0;left:1px;top:19px}54%{width:0;left:1px;top:19px}70%{width:50px;left:-8px;top:37px}84%{width:17px;left:21px;top:48px}to{width:25px;left:14px;top:45px}}@-webkit-keyframes animateSuccessLong{0%{width:0;right:46px;top:54px}65%{width:0;right:46px;top:54px}84%{width:55px;right:0;top:35px}to{width:47px;right:8px;top:38px}}@keyframes animateSuccessLong{0%{width:0;right:46px;top:54px}65%{width:0;right:46px;top:54px}84%{width:55px;right:0;top:35px}to{width:47px;right:8px;top:38px}}.swal-icon--info{border-color:#c9dae1}.swal-icon--info:before{width:5px;height:29px;bottom:17px;border-radius:2px;margin-left:-2px}.swal-icon--info:after,.swal-icon--info:before{content:"";position:absolute;left:50%;background-color:#c9dae1}.swal-icon--info:after{width:7px;height:7px;border-radius:50%;margin-left:-3px;top:19px}.swal-icon{width:80px;height:80px;border-width:4px;border-style:solid;border-radius:50%;padding:0;position:relative;box-sizing:content-box;margin:20px auto}.swal-icon:first-child{margin-top:32px}.swal-icon--custom{width:auto;height:auto;max-width:100%;border:none;border-radius:0}.swal-icon img{max-width:100%;max-height:100%}.swal-title{color:rgba(0,0,0,.65);font-weight:600;text-transform:none;position:relative;display:block;padding:13px 16px;font-size:27px;line-height:normal;text-align:center;margin-bottom:0}.swal-title:first-child{margin-top:26px}.swal-title:not(:first-child){padding-bottom:0}.swal-title:not(:last-child){margin-bottom:13px}.swal-text{font-size:16px;position:relative;float:none;line-height:normal;vertical-align:top;text-align:left;display:inline-block;margin:0;padding:0 10px;font-weight:400;color:rgba(0,0,0,.64);max-width:calc(100% - 20px);overflow-wrap:break-word;box-sizing:border-box}.swal-text:first-child{margin-top:45px}.swal-text:last-child{margin-bottom:45px}.swal-footer{text-align:right;padding-top:13px;margin-top:13px;padding:13px 16px;border-radius:inherit;border-top-left-radius:0;border-top-right-radius:0}.swal-button-container{margin:5px;display:inline-block;position:relative}.swal-button{background-color:#7cd1f9;color:#fff;border:none;box-shadow:none;border-radius:5px;font-weight:600;font-size:14px;padding:10px 24px;margin:0;cursor:pointer}.swal-button:not([disabled]):hover{background-color:#78cbf2}.swal-button:active{background-color:#70bce0}.swal-button:focus{outline:none;box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(43,114,165,.29)}.swal-button[disabled]{opacity:.5;cursor:default}.swal-button::-moz-focus-inner{border:0}.swal-button--cancel{color:#555;background-color:#efefef}.swal-button--cancel:not([disabled]):hover{background-color:#e8e8e8}.swal-button--cancel:active{background-color:#d7d7d7}.swal-button--cancel:focus{box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(116,136,150,.29)}.swal-button--danger{background-color:#e64942}.swal-button--danger:not([disabled]):hover{background-color:#df4740}.swal-button--danger:active{background-color:#cf423b}.swal-button--danger:focus{box-shadow:0 0 0 1px #fff,0 0 0 3px rgba(165,43,43,.29)}.swal-content{padding:0 20px;margin-top:20px;font-size:medium}.swal-content:last-child{margin-bottom:20px}.swal-content__input,.swal-content__textarea{-webkit-appearance:none;background-color:#fff;border:none;font-size:14px;display:block;box-sizing:border-box;width:100%;border:1px solid rgba(0,0,0,.14);padding:10px 13px;border-radius:2px;transition:border-color .2s}.swal-content__input:focus,.swal-content__textarea:focus{outline:none;border-color:#6db8ff}.swal-content__textarea{resize:vertical}.swal-button--loading{color:transparent}.swal-button--loading~.swal-button__loader{opacity:1}.swal-button__loader{position:absolute;height:auto;width:43px;z-index:2;left:50%;top:50%;-webkit-transform:translateX(-50%) translateY(-50%);transform:translateX(-50%) translateY(-50%);text-align:center;pointer-events:none;opacity:0}.swal-button__loader div{display:inline-block;float:none;vertical-align:baseline;width:9px;height:9px;padding:0;border:none;margin:2px;opacity:.4;border-radius:7px;background-color:hsla(0,0%,100%,.9);transition:background .2s;-webkit-animation:swal-loading-anim 1s infinite;animation:swal-loading-anim 1s infinite}.swal-button__loader div:nth-child(3n+2){-webkit-animation-delay:.15s;animation-delay:.15s}.swal-button__loader div:nth-child(3n+3){-webkit-animation-delay:.3s;animation-delay:.3s}@-webkit-keyframes swal-loading-anim{0%{opacity:.4}20%{opacity:.4}50%{opacity:1}to{opacity:.4}}@keyframes swal-loading-anim{0%{opacity:.4}20%{opacity:.4}50%{opacity:1}to{opacity:.4}}.swal-overlay{position:fixed;top:0;bottom:0;left:0;right:0;text-align:center;font-size:0;overflow-y:auto;background-color:rgba(0,0,0,.4);z-index:10000;pointer-events:none;opacity:0;transition:opacity .3s}.swal-overlay:before{content:" ";display:inline-block;vertical-align:middle;height:100%}.swal-overlay--show-modal{opacity:1;pointer-events:auto}.swal-overlay--show-modal .swal-modal{opacity:1;pointer-events:auto;box-sizing:border-box;-webkit-animation:showSweetAlert .3s;animation:showSweetAlert .3s;will-change:transform}.swal-modal{width:478px;opacity:0;pointer-events:none;background-color:#fff;text-align:center;border-radius:5px;position:static;margin:20px auto;display:inline-block;vertical-align:middle;-webkit-transform:scale(1);transform:scale(1);-webkit-transform-origin:50% 50%;transform-origin:50% 50%;z-index:10001;transition:opacity .2s,-webkit-transform .3s;transition:transform .3s,opacity .2s;transition:transform .3s,opacity .2s,-webkit-transform .3s}@media (max-width:500px){.swal-modal{width:calc(100% - 20px)}}@-webkit-keyframes showSweetAlert{0%{-webkit-transform:scale(1);transform:scale(1)}1%{-webkit-transform:scale(.5);transform:scale(.5)}45%{-webkit-transform:scale(1.05);transform:scale(1.05)}80%{-webkit-transform:scale(.95);transform:scale(.95)}to{-webkit-transform:scale(1);transform:scale(1)}}@keyframes showSweetAlert{0%{-webkit-transform:scale(1);transform:scale(1)}1%{-webkit-transform:scale(.5);transform:scale(.5)}45%{-webkit-transform:scale(1.05);transform:scale(1.05)}80%{-webkit-transform:scale(.95);transform:scale(.95)}to{-webkit-transform:scale(1);transform:scale(1)}}</style>
+    <title>Lingvanex</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="apple-touch-icon" sizes="180x180" href="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/img/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/img/favicon-16x16.png"><link rel="stylesheet" href="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/styles/main.min.css"><script src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/scripts/popup-frame.min.js"></script></head>
+
+<body style="margin: 0;" class="c12b5a4e69860bc968b47223fd-lingvanex-popup popup-container-xDENvTNm5WMTBDZyyvcJ">
+
+<div id="popup-container-xDENvTNm5WMTBDZyyvcJ">
+<div id="lingvanex-container-jB83gKBDk8yG6AQNEc9n" style="display: flex;">
+                                <div id="translator-icon" style="background-image: url(&quot;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/img/text_translate_icon.svg&quot;);"></div>
+                                <div id="speak-icon" class="c12b5a4e69860bc968b47223fd-position-center" style="display: none;">
+                                    <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/icon_sound_active.svg" class="c12b5a4e69860bc968b47223fd-sound_activate" alt="play sound" style="display: none;">
+                                    <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/icon_sound.svg" class="c12b5a4e69860bc968b47223fd-sound_inactive" alt="play sound">
+                                    <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/spin.gif" class="c12b5a4e69860bc968b47223fd-sound_loader" alt="loader" style="display: none;">
+                                </div>
+                                <div id="translateUrl" style="background-image: url(&quot;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/img/page_translate_icon.svg&quot;); display: none;"></div>
+                                <div id="imageOcr" class="c12b5a4e69860bc968b47223fd-site-icons" style="display: none;">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
+                                    <path d="M20.5 19H3.5C3.22386 19 3 18.7761 3 18.5V8.5C3 8.22386 3.22386 8 3.5 8H6.38197C6.76074 8 7.107 7.786 7.27639 7.44721L8.22361 5.55279C8.393 5.214 8.73926 5 9.11803 5H14.882C15.2607 5 15.607 5.214 15.7764 5.55279L16.7236 7.44721C16.893 7.786 17.2393 8 17.618 8H20.5C20.7761 8 21 8.22386 21 8.5V18.5C21 18.7761 20.7761 19 20.5 19Z" stroke="#858E99" fill="#ffffff" stroke-width="2" stroke-linejoin="round"></path>
+                                    <circle cx="12" cy="13" r="3" stroke="#858E99" stroke-width="2" fill="#ffffff"></circle>
+                                  </svg>
+                                </div>
+                            </div>
+            <div style="display:none;" id="c12b5a4e69860bc968b47223fd-medium-translator-div" class="lngx">
+                    <div class="c12b5a4e69860bc968b47223fd-translate-medium-div-top">
+                        <div class="c12b5a4e69860bc968b47223fd-etxensionLogo">
+                        <a target="_blank" href="https://lingvanex.com/"><img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/logo_text.png" class="c12b5a4e69860bc968b47223fd-logo_text" alt="logo with text"></a>
+                        </div>
+
+                         <div class="c12b5a4e69860bc968b47223fd-init  c12b5a4e69860bc968b47223fd-position-center" id="c12b5a4e69860bc968b47223fd-toLangSelected" data-value="vi_VN" data-name="Vietnamese" data-voice="true" data-rtl="false"><img class="c12b5a4e69860bc968b47223fd-small-select-img" src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/vn-min.png"><div class="c12b5a4e69860bc968b47223fd-ToDropArrow"><img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/arrow.png" alt="dropdown arrow"></div></div>
+
+
+                         <div class="c12b5a4e69860bc968b47223fd-lng_list_container" style="display: none">
+                            <div class="c12b5a4e69860bc968b47223fd-translate-header" style="height:42px; width:275px;">
+                                <p id="c12b5a4e69860bc968b47223fd-select-title" class="c12b5a4e69860bc968b47223fd-translator-title">Language Selection</p>
+                            </div>
+                            <div class="c12b5a4e69860bc968b47223fd-search-container">
+                                <input id="c12b5a4e69860bc968b47223fd-searchLanguage" type="search" class="c12b5a4e69860bc968b47223fd-small-lng-search c12b5a4e69860bc968b47223fd-form-control" placeholder="Search">
+                            </div>
+                            <ul class="c12b5a4e69860bc968b47223fd-small-select-to c12b5a4e69860bc968b47223fd-list-unstyled"><li data-value="af_ZA" data-voice="false" data-rtl="false" data-name="Afrikaans">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/za-min.png&#39;);"></div>
+                            Afrikaans</li><li data-value="sq_AL" data-voice="false" data-rtl="false" data-name="Albanian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/al-min.png&#39;);"></div>
+                            Albanian</li><li data-value="am_ET" data-voice="false" data-rtl="false" data-name="Amharic">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/et-min.png&#39;);"></div>
+                            Amharic</li><li data-value="ar_SA" data-voice="false" data-rtl="true" data-name="Arabic">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/sa-min.png&#39;);"></div>
+                            Arabic</li><li data-value="ar_EG" data-voice="false" data-rtl="true" data-name="Arabic (Egypt)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/eg-min.png&#39;);"></div>
+                            Arabic (Egypt)</li><li data-value="ar_AE" data-voice="false" data-rtl="true" data-name="Arabic (UAE)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ae-min.png&#39;);"></div>
+                            Arabic (UAE)</li><li data-value="hy_AM" data-voice="false" data-rtl="false" data-name="Armenian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/am-min.png&#39;);"></div>
+                            Armenian</li><li data-value="az_AZ" data-voice="false" data-rtl="false" data-name="Azerbaijani">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/az-min.png&#39;);"></div>
+                            Azerbaijani</li><li data-value="eu_ES" data-voice="false" data-rtl="false" data-name="Basque">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/es-min.png&#39;);"></div>
+                            Basque</li><li data-value="be_BY" data-voice="false" data-rtl="false" data-name="Belarusian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/by-min.png&#39;);"></div>
+                            Belarusian</li><li data-value="bn_BD" data-voice="false" data-rtl="false" data-name="Bengali (or Bangladeshi)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/bd-min.png&#39;);"></div>
+                            Bengali (or Bangladeshi)</li><li data-value="bs_BA" data-voice="false" data-rtl="false" data-name="Bosnian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ba-min.png&#39;);"></div>
+                            Bosnian</li><li data-value="bg_BG" data-voice="false" data-rtl="false" data-name="Bulgarian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/bg-min.png&#39;);"></div>
+                            Bulgarian</li><li data-value="ca_ES" data-voice="true" data-rtl="false" data-name="Catalan (Valencian)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/es-min.png&#39;);"></div>
+                            Catalan (Valencian)</li><li data-value="ceb_PH" data-voice="false" data-rtl="false" data-name="Cebuano">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ph-min.png&#39;);"></div>
+                            Cebuano</li><li data-value="ny_MW" data-voice="false" data-rtl="false" data-name="Chichewa (or Nyanja)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mw-min.png&#39;);"></div>
+                            Chichewa (or Nyanja)</li><li data-value="zh-Hans_CN" data-voice="false" data-rtl="false" data-name="Chinese (Simplified)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/cn-min.png&#39;);"></div>
+                            Chinese (Simplified)</li><li data-value="zh-Hant_TW" data-voice="false" data-rtl="false" data-name="Chinese (Traditional)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tw-min.png&#39;);"></div>
+                            Chinese (Traditional)</li><li data-value="co_FR" data-voice="false" data-rtl="false" data-name="Corsican">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/fr-min.png&#39;);"></div>
+                            Corsican</li><li data-value="hr_HR" data-voice="false" data-rtl="false" data-name="Croatian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/hr-min.png&#39;);"></div>
+                            Croatian</li><li data-value="cs_CZ" data-voice="true" data-rtl="false" data-name="Czech">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/cz-min.png&#39;);"></div>
+                            Czech</li><li data-value="da_DK" data-voice="true" data-rtl="false" data-name="Danish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/dk-min.png&#39;);"></div>
+                            Danish</li><li data-value="nl_NL" data-voice="true" data-rtl="false" data-name="Dutch (The Netherlands)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/nl-min.png&#39;);"></div>
+                            Dutch (The Netherlands)</li><li data-value="en_AU" data-voice="true" data-rtl="false" data-name="English (Australia)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/au-min.png&#39;);"></div>
+                            English (Australia)</li><li data-value="en_GB" data-voice="true" data-rtl="false" data-name="English (UK)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/gb-min.png&#39;);"></div>
+                            English (UK)</li><li data-value="en_US" data-voice="true" data-rtl="false" data-name="English (USA)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/us-min.png&#39;);"></div>
+                            English (USA)</li><li data-value="eo_WORLD" data-voice="false" data-rtl="false" data-name="Esperanto">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/world-min.png&#39;);"></div>
+                            Esperanto</li><li data-value="et_EE" data-voice="false" data-rtl="false" data-name="Estonian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ee-min.png&#39;);"></div>
+                            Estonian</li><li data-value="tl_PH" data-voice="false" data-rtl="false" data-name="Filipino (Tagalog)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ph-min.png&#39;);"></div>
+                            Filipino (Tagalog)</li><li data-value="fi_FI" data-voice="true" data-rtl="false" data-name="Finnish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/fi-min.png&#39;);"></div>
+                            Finnish</li><li data-value="fr_FR" data-voice="true" data-rtl="false" data-name="French">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/fr-min.png&#39;);"></div>
+                            French</li><li data-value="fr_CA" data-voice="true" data-rtl="false" data-name="French (Canada)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ca-min.png&#39;);"></div>
+                            French (Canada)</li><li data-value="fy_NL" data-voice="false" data-rtl="false" data-name="Frisian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/nl-min.png&#39;);"></div>
+                            Frisian</li><li data-value="gl_ES" data-voice="false" data-rtl="false" data-name="Galician">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/es-min.png&#39;);"></div>
+                            Galician</li><li data-value="ka_GE" data-voice="false" data-rtl="false" data-name="Georgian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ge-min.png&#39;);"></div>
+                            Georgian</li><li data-value="de_DE" data-voice="true" data-rtl="false" data-name="German">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/de-min.png&#39;);"></div>
+                            German</li><li data-value="el_GR" data-voice="true" data-rtl="false" data-name="Greek">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/gr-min.png&#39;);"></div>
+                            Greek</li><li data-value="gu_IN" data-voice="false" data-rtl="false" data-name="Gujarati">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Gujarati</li><li data-value="ht_HT" data-voice="false" data-rtl="false" data-name="Haitian Creole">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ht-min.png&#39;);"></div>
+                            Haitian Creole</li><li data-value="ha_NE" data-voice="false" data-rtl="false" data-name="Hausa">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ne-min.png&#39;);"></div>
+                            Hausa</li><li data-value="haw_US" data-voice="false" data-rtl="false" data-name="Hawaiian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/us-min.png&#39;);"></div>
+                            Hawaiian</li><li data-value="he_IL" data-voice="false" data-rtl="true" data-name="Hebrew">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/il-min.png&#39;);"></div>
+                            Hebrew</li><li data-value="hi_IN" data-voice="false" data-rtl="false" data-name="Hindi">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Hindi</li><li data-value="hmn_CN" data-voice="false" data-rtl="false" data-name="Hmong">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/cn-min.png&#39;);"></div>
+                            Hmong</li><li data-value="hu_HU" data-voice="true" data-rtl="false" data-name="Hungarian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/hu-min.png&#39;);"></div>
+                            Hungarian</li><li data-value="is_IS" data-voice="false" data-rtl="false" data-name="Icelandic">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/is-min.png&#39;);"></div>
+                            Icelandic</li><li data-value="ig_NG" data-voice="false" data-rtl="false" data-name="Igbo">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ng-min.png&#39;);"></div>
+                            Igbo</li><li data-value="id_ID" data-voice="false" data-rtl="false" data-name="Indonesian (or Bahasa Indonesia)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/id-min.png&#39;);"></div>
+                            Indonesian (or Bahasa Indonesia)</li><li data-value="ga_IE" data-voice="false" data-rtl="false" data-name="Irish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ie-min.png&#39;);"></div>
+                            Irish</li><li data-value="it_IT" data-voice="true" data-rtl="false" data-name="Italian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/it-min.png&#39;);"></div>
+                            Italian</li><li data-value="ja_JP" data-voice="false" data-rtl="false" data-name="Japanese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/jp-min.png&#39;);"></div>
+                            Japanese</li><li data-value="jv_ID" data-voice="false" data-rtl="false" data-name="Javanese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/id-min.png&#39;);"></div>
+                            Javanese</li><li data-value="kn_IN" data-voice="false" data-rtl="false" data-name="Kannada">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Kannada</li><li data-value="kk_KZ" data-voice="true" data-rtl="false" data-name="Kazakh">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/kz-min.png&#39;);"></div>
+                            Kazakh</li><li data-value="km_KH" data-voice="false" data-rtl="false" data-name="Khmer (or Cambodian)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/kh-min.png&#39;);"></div>
+                            Khmer (or Cambodian)</li><li data-value="rw_RW" data-voice="false" data-rtl="false" data-name="Kinyarwanda">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/rw-min.png&#39;);"></div>
+                            Kinyarwanda</li><li data-value="ko_KR" data-voice="false" data-rtl="false" data-name="Korean">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/kr-min.png&#39;);"></div>
+                            Korean</li><li data-value="ku_IR" data-voice="false" data-rtl="false" data-name="Kurdish (Kurmanji)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ir-min.png&#39;);"></div>
+                            Kurdish (Kurmanji)</li><li data-value="ky_KG" data-voice="false" data-rtl="false" data-name="Kyrgyz">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/kg-min.png&#39;);"></div>
+                            Kyrgyz</li><li data-value="lo_LA" data-voice="false" data-rtl="false" data-name="Lao (Laos)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/la-min.png&#39;);"></div>
+                            Lao (Laos)</li><li data-value="la_VAT" data-voice="false" data-rtl="false" data-name="Latin">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/vat-min.png&#39;);"></div>
+                            Latin</li><li data-value="lv_LV" data-voice="true" data-rtl="false" data-name="Latvian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/lv-min.png&#39;);"></div>
+                            Latvian</li><li data-value="lt_LT" data-voice="false" data-rtl="false" data-name="Lithuanian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/lt-min.png&#39;);"></div>
+                            Lithuanian</li><li data-value="lb_LU" data-voice="false" data-rtl="false" data-name="Luxembourgish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/lu-min.png&#39;);"></div>
+                            Luxembourgish</li><li data-value="mk_MK" data-voice="false" data-rtl="false" data-name="Macedonian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mk-min.png&#39;);"></div>
+                            Macedonian</li><li data-value="mg_MG" data-voice="false" data-rtl="false" data-name="Malagasy">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mg-min.png&#39;);"></div>
+                            Malagasy</li><li data-value="ms_MY" data-voice="false" data-rtl="false" data-name="Malay (or Bahasa Melayu)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/my-min.png&#39;);"></div>
+                            Malay (or Bahasa Melayu)</li><li data-value="ml_IN" data-voice="false" data-rtl="false" data-name="Malayalam">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Malayalam</li><li data-value="mt_MT" data-voice="false" data-rtl="false" data-name="Maltese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mt-min.png&#39;);"></div>
+                            Maltese</li><li data-value="mi_NZ" data-voice="false" data-rtl="false" data-name="Maori">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/nz-min.png&#39;);"></div>
+                            Maori</li><li data-value="mr_IN" data-voice="false" data-rtl="false" data-name="Marathi">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Marathi</li><li data-value="mn_MN" data-voice="false" data-rtl="false" data-name="Mongolian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mn-min.png&#39;);"></div>
+                            Mongolian</li><li data-value="my_MM" data-voice="false" data-rtl="false" data-name="Myanmar (Burmese)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mm-min.png&#39;);"></div>
+                            Myanmar (Burmese)</li><li data-value="ne_NP" data-voice="true" data-rtl="false" data-name="Nepali">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/np-min.png&#39;);"></div>
+                            Nepali</li><li data-value="no_NO" data-voice="true" data-rtl="false" data-name="Norwegian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/no-min.png&#39;);"></div>
+                            Norwegian</li><li data-value="or_OR" data-voice="false" data-rtl="false" data-name="Odia">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/or-min.png&#39;);"></div>
+                            Odia</li><li data-value="ps_AF" data-voice="false" data-rtl="true" data-name="Pashto (Pashto)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/af-min.png&#39;);"></div>
+                            Pashto (Pashto)</li><li data-value="fa_IR" data-voice="true" data-rtl="true" data-name="Persian (or Iranian)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ir-min.png&#39;);"></div>
+                            Persian (or Iranian)</li><li data-value="pl_PL" data-voice="true" data-rtl="false" data-name="Polish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pl-min.png&#39;);"></div>
+                            Polish</li><li data-value="pt_PT" data-voice="true" data-rtl="false" data-name="Portuguese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pt-min.png&#39;);"></div>
+                            Portuguese</li><li data-value="pt_BR" data-voice="true" data-rtl="false" data-name="Portuguese (Brazil)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/br-min.png&#39;);"></div>
+                            Portuguese (Brazil)</li><li data-value="pa_PK" data-voice="false" data-rtl="false" data-name="Punjabi (Panjabi)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pk-min.png&#39;);"></div>
+                            Punjabi (Panjabi)</li><li data-value="ro_RO" data-voice="true" data-rtl="false" data-name="Romanian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ro-min.png&#39;);"></div>
+                            Romanian</li><li data-value="ru_RU" data-voice="true" data-rtl="false" data-name="Russian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ru-min.png&#39;);"></div>
+                            Russian</li><li data-value="sm_WS" data-voice="false" data-rtl="false" data-name="Samoan">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ws-min.png&#39;);"></div>
+                            Samoan</li><li data-value="gd_GB" data-voice="false" data-rtl="false" data-name="Scottish (Gaelic)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/gb-min.png&#39;);"></div>
+                            Scottish (Gaelic)</li><li data-value="sr-Cyrl_RS" data-voice="false" data-rtl="false" data-name="Serbian - Cyrillic">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/rs-min.png&#39;);"></div>
+                            Serbian - Cyrillic</li><li data-value="st_LS" data-voice="false" data-rtl="false" data-name="Sesotho">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ls-min.png&#39;);"></div>
+                            Sesotho</li><li data-value="sn_ZW" data-voice="false" data-rtl="false" data-name="Shona">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/zw-min.png&#39;);"></div>
+                            Shona</li><li data-value="sd_PK" data-voice="false" data-rtl="true" data-name="Sindhi">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pk-min.png&#39;);"></div>
+                            Sindhi</li><li data-value="si_LK" data-voice="false" data-rtl="false" data-name="Sinhala (or Sinhalese)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/lk-min.png&#39;);"></div>
+                            Sinhala (or Sinhalese)</li><li data-value="sk_SK" data-voice="true" data-rtl="false" data-name="Slovak">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/sk-min.png&#39;);"></div>
+                            Slovak</li><li data-value="sl_SI" data-voice="true" data-rtl="false" data-name="Slovenian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/si-min.png&#39;);"></div>
+                            Slovenian</li><li data-value="so_SO" data-voice="false" data-rtl="false" data-name="Somali">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/so-min.png&#39;);"></div>
+                            Somali</li><li data-value="es_ES" data-voice="true" data-rtl="false" data-name="Spanish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/es-min.png&#39;);"></div>
+                            Spanish</li><li data-value="es_MX" data-voice="true" data-rtl="false" data-name="Spanish (Mexico)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mx-min.png&#39;);"></div>
+                            Spanish (Mexico)</li><li data-value="es_US" data-voice="true" data-rtl="false" data-name="Spanish (USA)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/us-min.png&#39;);"></div>
+                            Spanish (USA)</li><li data-value="su_ID" data-voice="false" data-rtl="false" data-name="Sundanese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/id-min.png&#39;);"></div>
+                            Sundanese</li><li data-value="sw_TZ" data-voice="false" data-rtl="false" data-name="Swahili">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tz-min.png&#39;);"></div>
+                            Swahili</li><li data-value="sv_SE" data-voice="true" data-rtl="false" data-name="Swedish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/se-min.png&#39;);"></div>
+                            Swedish</li><li data-value="tg_TJ" data-voice="false" data-rtl="false" data-name="Tajik">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tj-min.png&#39;);"></div>
+                            Tajik</li><li data-value="ta_IN" data-voice="false" data-rtl="false" data-name="Tamil">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Tamil</li><li data-value="tt_TT" data-voice="false" data-rtl="false" data-name="Tatar">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tt-min.png&#39;);"></div>
+                            Tatar</li><li data-value="te_IN" data-voice="false" data-rtl="false" data-name="Telugu">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Telugu</li><li data-value="th_TH" data-voice="false" data-rtl="false" data-name="Thai">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/th-min.png&#39;);"></div>
+                            Thai</li><li data-value="tr_TR" data-voice="true" data-rtl="false" data-name="Turkish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tr-min.png&#39;);"></div>
+                            Turkish</li><li data-value="uk_UA" data-voice="true" data-rtl="false" data-name="Ukrainian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ua-min.png&#39;);"></div>
+                            Ukrainian</li><li data-value="ur_PK" data-voice="false" data-rtl="true" data-name="Urdu">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pk-min.png&#39;);"></div>
+                            Urdu</li><li data-value="ug_UG" data-voice="false" data-rtl="true" data-name="Uyghur">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ug-min.png&#39;);"></div>
+                            Uyghur</li><li data-value="uz_UZ" data-voice="false" data-rtl="false" data-name="Uzbek">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/uz-min.png&#39;);"></div>
+                            Uzbek</li><li data-value="vi_VN" data-voice="true" data-rtl="false" data-name="Vietnamese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/vn-min.png&#39;);"></div>
+                            Vietnamese</li><li data-value="cy_GB" data-voice="false" data-rtl="false" data-name="Welsh">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/gb-min.png&#39;);"></div>
+                            Welsh</li><li data-value="xh_ZA" data-voice="false" data-rtl="false" data-name="Xhosa">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/za-min.png&#39;);"></div>
+                            Xhosa</li><li data-value="yi_IL" data-voice="false" data-rtl="true" data-name="Yiddish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/il-min.png&#39;);"></div>
+                            Yiddish</li><li data-value="yo_NG" data-voice="false" data-rtl="false" data-name="Yoruba">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ng-min.png&#39;);"></div>
+                            Yoruba</li><li data-value="zu_ZA" data-voice="false" data-rtl="false" data-name="Zulu">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/za-min.png&#39;);"></div>
+                            Zulu</li></ul>
+                            <div class="c12b5a4e69860bc968b47223fd-btnCloseList" aria-hidden="true" title="Close">
+                              <img class="c12b5a4e69860bc968b47223fd-close_btn" src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/close.svg" alt="close button">
+                          </div>
+                         </div>
+
+                         <div class="c12b5a4e69860bc968b47223fd-translatedText c12b5a4e69860bc968b47223fd-position-center-left" style="text-align: left !important; direction: ltr;"></div>
+                         <img class="c12b5a4e69860bc968b47223fd-spinner-gif-medium" src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/spin.gif" alt="spinner">
+
+
+
+                          <div class="c12b5a4e69860bc968b47223fd-icon-nav c12b5a4e69860bc968b47223fd-position-center-space-between">
+                            <div class="c12b5a4e69860bc968b47223fd-speaker-icon-container c12b5a4e69860bc968b47223fd-position-center" style="display: inherit;">
+                                    <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/sound_active.png" class="c12b5a4e69860bc968b47223fd-sound_activate" alt="play sound" style="display: none;">
+                                    <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/sound.png" class="c12b5a4e69860bc968b47223fd-sound_inactive" alt="play sound">
+                                    <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/spin.gif" class="c12b5a4e69860bc968b47223fd-sound_loader" alt="loader" style="display: none;">
+                            </div>
+                            <div class="c12b5a4e69860bc968b47223fd-bookmark-item-container c12b5a4e69860bc968b47223fd-position-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none" class="c12b5a4e69860bc968b47223fd-disable-border c12b5a4e69860bc968b47223fd-red-svg c12b5a4e69860bc968b47223fd-bookmark-icon c12b5a4e69860bc968b47223fd-icon replaced-svg">
+                                <path d="M10.0469 2.00105C10.3422 1.0713 11.6578 1.07131 11.9531 2.00106L13.4288 6.64786C13.5615 7.06543 13.9505 7.34806 14.3886 7.34515L19.264 7.31273C20.2395 7.30625 20.646 8.55748 19.853 9.12562L15.8897 11.9651C15.5335 12.2202 15.3849 12.6775 15.5231 13.0933L17.0605 17.7201C17.3681 18.6458 16.3038 19.4191 15.5184 18.8405L11.5932 15.9486C11.2404 15.6887 10.7596 15.6887 10.4068 15.9486L6.48162 18.8405C5.69625 19.4191 4.63188 18.6458 4.93949 17.7201L6.4769 13.0933C6.61506 12.6775 6.46647 12.2202 6.11031 11.9651L2.14698 9.12562C1.35398 8.55749 1.76053 7.30625 2.73602 7.31273L7.61142 7.34515C8.04954 7.34806 8.43854 7.06544 8.57116 6.64786L10.0469 2.00105Z" stroke="#858E99" stroke-width="2"></path>
+                                </svg>
+                            </div>
+                            <div style="cursor: pointer" class="c12b5a4e69860bc968b47223fd-settings-icon-container c12b5a4e69860bc968b47223fd-position-center">
+
+                            <svg width="22px" height="22px" viewBox="0 0 22 22" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+                                <title>settings</title>
+                                <desc>Created with Sketch.</desc>
+                                <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <g id="settings" transform="translate(-1.000000, -1.000000)" fill="#858E99" fill-rule="nonzero">
+                                        <path d="M10.7815,1.06608 C11.5835,0.97598 12.4006,0.97374 13.2184,1.06527 C13.8034,1.13072 14.1258,1.75323 14.2694,2.32402 C14.4184,2.91667 14.8361,3.4337 15.4441,3.68552 C16.0521,3.93735 16.7131,3.86715 17.2375,3.55347 C17.7426,3.25136 18.4108,3.03919 18.8707,3.4065 C19.5137,3.9201 20.0899,4.49942 20.5933,5.13027 C20.9604,5.59025 20.7485,6.2583 20.4466,6.7635 C20.1332,7.2878 20.0631,7.9486 20.3149,8.5563 C20.5437182,9.10875455 20.9915446,9.5041843 21.5161554,9.68361104 L21.6757,9.7309 C22.2463,9.8746 22.8686,10.1972 22.9343,10.782 C23.0244,11.584 23.0266,12.4011 22.9351,13.2189 C22.8697,13.8038 22.2472,14.1263 21.6764,14.2698 C21.0837,14.4189 20.5667,14.8366 20.3149,15.4446 C20.063,16.0526 20.1332,16.7136 20.4469,17.238 C20.749,17.7431 20.9612,18.4113 20.5939,18.8712 C20.0803,19.5142 19.501,20.0904 18.8701,20.5938 C18.4454846,20.9326615 17.8435533,20.778174 17.3561861,20.514949 L17.2369,20.4471 C16.7125,20.1337 16.0518,20.0636 15.4441,20.3154 C14.8364,20.5671 14.4187,21.0838 14.2695,21.6762 C14.1258,22.2468 13.8032,22.8691 13.2184,22.9348 C12.4164,23.0249 11.5993,23.0271 10.7815,22.9356 C10.1965,22.8702 9.8741,22.2477 9.7305,21.6769 C9.5815,21.0842 9.1638,20.5672 8.5558,20.3154 C8.00307273,20.0864 7.4065438,20.1235983 6.90866251,20.3679417 L6.7624,20.4474 C6.2573,20.7495 5.5891,20.9617 5.12922,20.5944 C4.48619,20.0808 3.91003,19.5015 3.40661,18.8706 C3.03955,18.4106 3.25145,17.7425 3.55335,17.2374 C3.86672,16.7131 3.93676,16.0523 3.68503,15.4446 C3.45619364,14.8921455 3.00834074,14.4967157 2.48375532,14.317289 L2.32422,14.27 C1.75355,14.1263 1.1313,13.8037 1.0656,13.2189 C0.97549,12.4169 0.97325,11.5998 1.06478,10.782 C1.13023,10.197 1.75274,9.8746 2.32353,9.731 C2.91618,9.582 3.43321,9.1642 3.68503,8.5563 C3.91396636,8.00357273 3.87676223,7.4070438 3.63243338,6.90916251 L3.55298,6.7629 C3.25086,6.2578 3.0387,5.58959 3.40601,5.12971 C3.9196,4.48668 4.49892,3.91051 5.12978,3.40709 C5.58976,3.04003 6.2579,3.25194 6.763,3.55384 C7.2874,3.86721 7.9481,3.93726 8.5558,3.68553 C9.1635,3.4338 9.5812,2.91707 9.7304,2.32471 C9.8741,1.75404 10.1967,1.13178 10.7815,1.06608 Z M12,8 C9.7909,8 8,9.7909 8,12 C8,14.2091 9.7909,16 12,16 C14.2091,16 16,14.2091 16,12 C16,9.7909 14.2091,8 12,8 Z" id="Shape"></path>
+                                    </g>
+                                </g>
+                            </svg>
+                            </div>
+                        </div>
+
+
+
+                            <div class="c12b5a4e69860bc968b47223fd-moreAplacationText">
+                                <a target="_blank" href="https://app.lingvanex.com/?utm_source=extensions&amp;utm_medium=banner&amp;utm_campaign=dt_07-03-2025" class="c12b5a4e69860bc968b47223fd-add-link"><img class="c12b5a4e69860bc968b47223fd-add-img" src="./147">
+                                    <span>Translate files</span>
+                                </a>
+                            </div>
+                    </div>
+
+            </div>
+        
+    <div style="display:none;" id="c12b5a4e69860bc968b47223fd-small-translator-div" class="lngx c12b5a4e69860bc968b47223fd-small-translator-div">
+        
+
+
+
+                <div class="c12b5a4e69860bc968b47223fd-init c12b5a4e69860bc968b47223fd-position-center" id="c12b5a4e69860bc968b47223fd-toLangSelected" data-value="vi_VN" data-name="Vietnamese" data-voice="true" data-rtl="false"><img class="c12b5a4e69860bc968b47223fd-small-select-img" src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/vn-min.png"><div class="c12b5a4e69860bc968b47223fd-ToDropArrow"><img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/arrow.png" alt="dropdown arrow"></div></div>
+
+
+
+        <div class="c12b5a4e69860bc968b47223fd-lng_list_container" style="display: none">
+            <div class="c12b5a4e69860bc968b47223fd-translate-header" style="height:42px; width:275px;">
+                <p id="c12b5a4e69860bc968b47223fd-select-title" class="c12b5a4e69860bc968b47223fd-translator-title">Language Selection</p>
+            </div>
+            <div class="c12b5a4e69860bc968b47223fd-search-container">
+                <input id="c12b5a4e69860bc968b47223fd-searchLanguage" type="search" class="c12b5a4e69860bc968b47223fd-small-lng-search c12b5a4e69860bc968b47223fd-form-control" placeholder="Search">
+            </div>
+            <ul class="c12b5a4e69860bc968b47223fd-small-select-to c12b5a4e69860bc968b47223fd-list-unstyled"><li data-value="af_ZA" data-voice="false" data-rtl="false" data-name="Afrikaans">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/za-min.png&#39;);"></div>
+                            Afrikaans</li><li data-value="sq_AL" data-voice="false" data-rtl="false" data-name="Albanian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/al-min.png&#39;);"></div>
+                            Albanian</li><li data-value="am_ET" data-voice="false" data-rtl="false" data-name="Amharic">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/et-min.png&#39;);"></div>
+                            Amharic</li><li data-value="ar_SA" data-voice="false" data-rtl="true" data-name="Arabic">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/sa-min.png&#39;);"></div>
+                            Arabic</li><li data-value="ar_EG" data-voice="false" data-rtl="true" data-name="Arabic (Egypt)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/eg-min.png&#39;);"></div>
+                            Arabic (Egypt)</li><li data-value="ar_AE" data-voice="false" data-rtl="true" data-name="Arabic (UAE)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ae-min.png&#39;);"></div>
+                            Arabic (UAE)</li><li data-value="hy_AM" data-voice="false" data-rtl="false" data-name="Armenian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/am-min.png&#39;);"></div>
+                            Armenian</li><li data-value="az_AZ" data-voice="false" data-rtl="false" data-name="Azerbaijani">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/az-min.png&#39;);"></div>
+                            Azerbaijani</li><li data-value="eu_ES" data-voice="false" data-rtl="false" data-name="Basque">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/es-min.png&#39;);"></div>
+                            Basque</li><li data-value="be_BY" data-voice="false" data-rtl="false" data-name="Belarusian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/by-min.png&#39;);"></div>
+                            Belarusian</li><li data-value="bn_BD" data-voice="false" data-rtl="false" data-name="Bengali (or Bangladeshi)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/bd-min.png&#39;);"></div>
+                            Bengali (or Bangladeshi)</li><li data-value="bs_BA" data-voice="false" data-rtl="false" data-name="Bosnian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ba-min.png&#39;);"></div>
+                            Bosnian</li><li data-value="bg_BG" data-voice="false" data-rtl="false" data-name="Bulgarian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/bg-min.png&#39;);"></div>
+                            Bulgarian</li><li data-value="ca_ES" data-voice="true" data-rtl="false" data-name="Catalan (Valencian)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/es-min.png&#39;);"></div>
+                            Catalan (Valencian)</li><li data-value="ceb_PH" data-voice="false" data-rtl="false" data-name="Cebuano">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ph-min.png&#39;);"></div>
+                            Cebuano</li><li data-value="ny_MW" data-voice="false" data-rtl="false" data-name="Chichewa (or Nyanja)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mw-min.png&#39;);"></div>
+                            Chichewa (or Nyanja)</li><li data-value="zh-Hans_CN" data-voice="false" data-rtl="false" data-name="Chinese (Simplified)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/cn-min.png&#39;);"></div>
+                            Chinese (Simplified)</li><li data-value="zh-Hant_TW" data-voice="false" data-rtl="false" data-name="Chinese (Traditional)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tw-min.png&#39;);"></div>
+                            Chinese (Traditional)</li><li data-value="co_FR" data-voice="false" data-rtl="false" data-name="Corsican">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/fr-min.png&#39;);"></div>
+                            Corsican</li><li data-value="hr_HR" data-voice="false" data-rtl="false" data-name="Croatian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/hr-min.png&#39;);"></div>
+                            Croatian</li><li data-value="cs_CZ" data-voice="true" data-rtl="false" data-name="Czech">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/cz-min.png&#39;);"></div>
+                            Czech</li><li data-value="da_DK" data-voice="true" data-rtl="false" data-name="Danish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/dk-min.png&#39;);"></div>
+                            Danish</li><li data-value="nl_NL" data-voice="true" data-rtl="false" data-name="Dutch (The Netherlands)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/nl-min.png&#39;);"></div>
+                            Dutch (The Netherlands)</li><li data-value="en_AU" data-voice="true" data-rtl="false" data-name="English (Australia)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/au-min.png&#39;);"></div>
+                            English (Australia)</li><li data-value="en_GB" data-voice="true" data-rtl="false" data-name="English (UK)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/gb-min.png&#39;);"></div>
+                            English (UK)</li><li data-value="en_US" data-voice="true" data-rtl="false" data-name="English (USA)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/us-min.png&#39;);"></div>
+                            English (USA)</li><li data-value="eo_WORLD" data-voice="false" data-rtl="false" data-name="Esperanto">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/world-min.png&#39;);"></div>
+                            Esperanto</li><li data-value="et_EE" data-voice="false" data-rtl="false" data-name="Estonian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ee-min.png&#39;);"></div>
+                            Estonian</li><li data-value="tl_PH" data-voice="false" data-rtl="false" data-name="Filipino (Tagalog)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ph-min.png&#39;);"></div>
+                            Filipino (Tagalog)</li><li data-value="fi_FI" data-voice="true" data-rtl="false" data-name="Finnish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/fi-min.png&#39;);"></div>
+                            Finnish</li><li data-value="fr_FR" data-voice="true" data-rtl="false" data-name="French">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/fr-min.png&#39;);"></div>
+                            French</li><li data-value="fr_CA" data-voice="true" data-rtl="false" data-name="French (Canada)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ca-min.png&#39;);"></div>
+                            French (Canada)</li><li data-value="fy_NL" data-voice="false" data-rtl="false" data-name="Frisian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/nl-min.png&#39;);"></div>
+                            Frisian</li><li data-value="gl_ES" data-voice="false" data-rtl="false" data-name="Galician">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/es-min.png&#39;);"></div>
+                            Galician</li><li data-value="ka_GE" data-voice="false" data-rtl="false" data-name="Georgian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ge-min.png&#39;);"></div>
+                            Georgian</li><li data-value="de_DE" data-voice="true" data-rtl="false" data-name="German">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/de-min.png&#39;);"></div>
+                            German</li><li data-value="el_GR" data-voice="true" data-rtl="false" data-name="Greek">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/gr-min.png&#39;);"></div>
+                            Greek</li><li data-value="gu_IN" data-voice="false" data-rtl="false" data-name="Gujarati">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Gujarati</li><li data-value="ht_HT" data-voice="false" data-rtl="false" data-name="Haitian Creole">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ht-min.png&#39;);"></div>
+                            Haitian Creole</li><li data-value="ha_NE" data-voice="false" data-rtl="false" data-name="Hausa">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ne-min.png&#39;);"></div>
+                            Hausa</li><li data-value="haw_US" data-voice="false" data-rtl="false" data-name="Hawaiian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/us-min.png&#39;);"></div>
+                            Hawaiian</li><li data-value="he_IL" data-voice="false" data-rtl="true" data-name="Hebrew">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/il-min.png&#39;);"></div>
+                            Hebrew</li><li data-value="hi_IN" data-voice="false" data-rtl="false" data-name="Hindi">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Hindi</li><li data-value="hmn_CN" data-voice="false" data-rtl="false" data-name="Hmong">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/cn-min.png&#39;);"></div>
+                            Hmong</li><li data-value="hu_HU" data-voice="true" data-rtl="false" data-name="Hungarian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/hu-min.png&#39;);"></div>
+                            Hungarian</li><li data-value="is_IS" data-voice="false" data-rtl="false" data-name="Icelandic">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/is-min.png&#39;);"></div>
+                            Icelandic</li><li data-value="ig_NG" data-voice="false" data-rtl="false" data-name="Igbo">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ng-min.png&#39;);"></div>
+                            Igbo</li><li data-value="id_ID" data-voice="false" data-rtl="false" data-name="Indonesian (or Bahasa Indonesia)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/id-min.png&#39;);"></div>
+                            Indonesian (or Bahasa Indonesia)</li><li data-value="ga_IE" data-voice="false" data-rtl="false" data-name="Irish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ie-min.png&#39;);"></div>
+                            Irish</li><li data-value="it_IT" data-voice="true" data-rtl="false" data-name="Italian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/it-min.png&#39;);"></div>
+                            Italian</li><li data-value="ja_JP" data-voice="false" data-rtl="false" data-name="Japanese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/jp-min.png&#39;);"></div>
+                            Japanese</li><li data-value="jv_ID" data-voice="false" data-rtl="false" data-name="Javanese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/id-min.png&#39;);"></div>
+                            Javanese</li><li data-value="kn_IN" data-voice="false" data-rtl="false" data-name="Kannada">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Kannada</li><li data-value="kk_KZ" data-voice="true" data-rtl="false" data-name="Kazakh">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/kz-min.png&#39;);"></div>
+                            Kazakh</li><li data-value="km_KH" data-voice="false" data-rtl="false" data-name="Khmer (or Cambodian)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/kh-min.png&#39;);"></div>
+                            Khmer (or Cambodian)</li><li data-value="rw_RW" data-voice="false" data-rtl="false" data-name="Kinyarwanda">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/rw-min.png&#39;);"></div>
+                            Kinyarwanda</li><li data-value="ko_KR" data-voice="false" data-rtl="false" data-name="Korean">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/kr-min.png&#39;);"></div>
+                            Korean</li><li data-value="ku_IR" data-voice="false" data-rtl="false" data-name="Kurdish (Kurmanji)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ir-min.png&#39;);"></div>
+                            Kurdish (Kurmanji)</li><li data-value="ky_KG" data-voice="false" data-rtl="false" data-name="Kyrgyz">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/kg-min.png&#39;);"></div>
+                            Kyrgyz</li><li data-value="lo_LA" data-voice="false" data-rtl="false" data-name="Lao (Laos)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/la-min.png&#39;);"></div>
+                            Lao (Laos)</li><li data-value="la_VAT" data-voice="false" data-rtl="false" data-name="Latin">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/vat-min.png&#39;);"></div>
+                            Latin</li><li data-value="lv_LV" data-voice="true" data-rtl="false" data-name="Latvian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/lv-min.png&#39;);"></div>
+                            Latvian</li><li data-value="lt_LT" data-voice="false" data-rtl="false" data-name="Lithuanian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/lt-min.png&#39;);"></div>
+                            Lithuanian</li><li data-value="lb_LU" data-voice="false" data-rtl="false" data-name="Luxembourgish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/lu-min.png&#39;);"></div>
+                            Luxembourgish</li><li data-value="mk_MK" data-voice="false" data-rtl="false" data-name="Macedonian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mk-min.png&#39;);"></div>
+                            Macedonian</li><li data-value="mg_MG" data-voice="false" data-rtl="false" data-name="Malagasy">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mg-min.png&#39;);"></div>
+                            Malagasy</li><li data-value="ms_MY" data-voice="false" data-rtl="false" data-name="Malay (or Bahasa Melayu)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/my-min.png&#39;);"></div>
+                            Malay (or Bahasa Melayu)</li><li data-value="ml_IN" data-voice="false" data-rtl="false" data-name="Malayalam">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Malayalam</li><li data-value="mt_MT" data-voice="false" data-rtl="false" data-name="Maltese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mt-min.png&#39;);"></div>
+                            Maltese</li><li data-value="mi_NZ" data-voice="false" data-rtl="false" data-name="Maori">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/nz-min.png&#39;);"></div>
+                            Maori</li><li data-value="mr_IN" data-voice="false" data-rtl="false" data-name="Marathi">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Marathi</li><li data-value="mn_MN" data-voice="false" data-rtl="false" data-name="Mongolian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mn-min.png&#39;);"></div>
+                            Mongolian</li><li data-value="my_MM" data-voice="false" data-rtl="false" data-name="Myanmar (Burmese)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mm-min.png&#39;);"></div>
+                            Myanmar (Burmese)</li><li data-value="ne_NP" data-voice="true" data-rtl="false" data-name="Nepali">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/np-min.png&#39;);"></div>
+                            Nepali</li><li data-value="no_NO" data-voice="true" data-rtl="false" data-name="Norwegian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/no-min.png&#39;);"></div>
+                            Norwegian</li><li data-value="or_OR" data-voice="false" data-rtl="false" data-name="Odia">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/or-min.png&#39;);"></div>
+                            Odia</li><li data-value="ps_AF" data-voice="false" data-rtl="true" data-name="Pashto (Pashto)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/af-min.png&#39;);"></div>
+                            Pashto (Pashto)</li><li data-value="fa_IR" data-voice="true" data-rtl="true" data-name="Persian (or Iranian)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ir-min.png&#39;);"></div>
+                            Persian (or Iranian)</li><li data-value="pl_PL" data-voice="true" data-rtl="false" data-name="Polish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pl-min.png&#39;);"></div>
+                            Polish</li><li data-value="pt_PT" data-voice="true" data-rtl="false" data-name="Portuguese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pt-min.png&#39;);"></div>
+                            Portuguese</li><li data-value="pt_BR" data-voice="true" data-rtl="false" data-name="Portuguese (Brazil)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/br-min.png&#39;);"></div>
+                            Portuguese (Brazil)</li><li data-value="pa_PK" data-voice="false" data-rtl="false" data-name="Punjabi (Panjabi)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pk-min.png&#39;);"></div>
+                            Punjabi (Panjabi)</li><li data-value="ro_RO" data-voice="true" data-rtl="false" data-name="Romanian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ro-min.png&#39;);"></div>
+                            Romanian</li><li data-value="ru_RU" data-voice="true" data-rtl="false" data-name="Russian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ru-min.png&#39;);"></div>
+                            Russian</li><li data-value="sm_WS" data-voice="false" data-rtl="false" data-name="Samoan">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ws-min.png&#39;);"></div>
+                            Samoan</li><li data-value="gd_GB" data-voice="false" data-rtl="false" data-name="Scottish (Gaelic)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/gb-min.png&#39;);"></div>
+                            Scottish (Gaelic)</li><li data-value="sr-Cyrl_RS" data-voice="false" data-rtl="false" data-name="Serbian - Cyrillic">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/rs-min.png&#39;);"></div>
+                            Serbian - Cyrillic</li><li data-value="st_LS" data-voice="false" data-rtl="false" data-name="Sesotho">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ls-min.png&#39;);"></div>
+                            Sesotho</li><li data-value="sn_ZW" data-voice="false" data-rtl="false" data-name="Shona">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/zw-min.png&#39;);"></div>
+                            Shona</li><li data-value="sd_PK" data-voice="false" data-rtl="true" data-name="Sindhi">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pk-min.png&#39;);"></div>
+                            Sindhi</li><li data-value="si_LK" data-voice="false" data-rtl="false" data-name="Sinhala (or Sinhalese)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/lk-min.png&#39;);"></div>
+                            Sinhala (or Sinhalese)</li><li data-value="sk_SK" data-voice="true" data-rtl="false" data-name="Slovak">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/sk-min.png&#39;);"></div>
+                            Slovak</li><li data-value="sl_SI" data-voice="true" data-rtl="false" data-name="Slovenian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/si-min.png&#39;);"></div>
+                            Slovenian</li><li data-value="so_SO" data-voice="false" data-rtl="false" data-name="Somali">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/so-min.png&#39;);"></div>
+                            Somali</li><li data-value="es_ES" data-voice="true" data-rtl="false" data-name="Spanish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/es-min.png&#39;);"></div>
+                            Spanish</li><li data-value="es_MX" data-voice="true" data-rtl="false" data-name="Spanish (Mexico)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/mx-min.png&#39;);"></div>
+                            Spanish (Mexico)</li><li data-value="es_US" data-voice="true" data-rtl="false" data-name="Spanish (USA)">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/us-min.png&#39;);"></div>
+                            Spanish (USA)</li><li data-value="su_ID" data-voice="false" data-rtl="false" data-name="Sundanese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/id-min.png&#39;);"></div>
+                            Sundanese</li><li data-value="sw_TZ" data-voice="false" data-rtl="false" data-name="Swahili">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tz-min.png&#39;);"></div>
+                            Swahili</li><li data-value="sv_SE" data-voice="true" data-rtl="false" data-name="Swedish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/se-min.png&#39;);"></div>
+                            Swedish</li><li data-value="tg_TJ" data-voice="false" data-rtl="false" data-name="Tajik">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tj-min.png&#39;);"></div>
+                            Tajik</li><li data-value="ta_IN" data-voice="false" data-rtl="false" data-name="Tamil">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Tamil</li><li data-value="tt_TT" data-voice="false" data-rtl="false" data-name="Tatar">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tt-min.png&#39;);"></div>
+                            Tatar</li><li data-value="te_IN" data-voice="false" data-rtl="false" data-name="Telugu">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/in-min.png&#39;);"></div>
+                            Telugu</li><li data-value="th_TH" data-voice="false" data-rtl="false" data-name="Thai">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/th-min.png&#39;);"></div>
+                            Thai</li><li data-value="tr_TR" data-voice="true" data-rtl="false" data-name="Turkish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/tr-min.png&#39;);"></div>
+                            Turkish</li><li data-value="uk_UA" data-voice="true" data-rtl="false" data-name="Ukrainian">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ua-min.png&#39;);"></div>
+                            Ukrainian</li><li data-value="ur_PK" data-voice="false" data-rtl="true" data-name="Urdu">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/pk-min.png&#39;);"></div>
+                            Urdu</li><li data-value="ug_UG" data-voice="false" data-rtl="true" data-name="Uyghur">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ug-min.png&#39;);"></div>
+                            Uyghur</li><li data-value="uz_UZ" data-voice="false" data-rtl="false" data-name="Uzbek">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/uz-min.png&#39;);"></div>
+                            Uzbek</li><li data-value="vi_VN" data-voice="true" data-rtl="false" data-name="Vietnamese">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/vn-min.png&#39;);"></div>
+                            Vietnamese</li><li data-value="cy_GB" data-voice="false" data-rtl="false" data-name="Welsh">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/gb-min.png&#39;);"></div>
+                            Welsh</li><li data-value="xh_ZA" data-voice="false" data-rtl="false" data-name="Xhosa">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/za-min.png&#39;);"></div>
+                            Xhosa</li><li data-value="yi_IL" data-voice="false" data-rtl="true" data-name="Yiddish">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/il-min.png&#39;);"></div>
+                            Yiddish</li><li data-value="yo_NG" data-voice="false" data-rtl="false" data-name="Yoruba">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/ng-min.png&#39;);"></div>
+                            Yoruba</li><li data-value="zu_ZA" data-voice="false" data-rtl="false" data-name="Zulu">
+                                <div class="c12b5a4e69860bc968b47223fd-country-flag" style="background-image:url(&#39;chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/flags/za-min.png&#39;);"></div>
+                            Zulu</li></ul>
+            <div class="c12b5a4e69860bc968b47223fd-btnCloseList" aria-hidden="true" title="Close">
+              <img class="c12b5a4e69860bc968b47223fd-close_btn" src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/close.svg" alt="close button">
+          </div>
+        </div>
+
+
+            <div class="c12b5a4e69860bc968b47223fd-translatedText c12b5a4e69860bc968b47223fd-position-center-left" style="text-align: left !important; direction: ltr;"></div>
+
+            <img class="c12b5a4e69860bc968b47223fd-spinner-gif-small" src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/spin.gif" alt="spinner">
+
+            <div class="c12b5a4e69860bc968b47223fd-icon-nav c12b5a4e69860bc968b47223fd-position-center-space-between" style="width: auto">
+                <div class="c12b5a4e69860bc968b47223fd-speaker-icon-container c12b5a4e69860bc968b47223fd-position-center" style="display: inherit;">
+                        <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/sound_active.png" class="c12b5a4e69860bc968b47223fd-sound_activate" alt="play sound" style="display: none;">
+                        <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/sound.png" class="c12b5a4e69860bc968b47223fd-sound_inactive" alt="play sound">
+                        <img src="chrome-extension://kdamfjkjgaidaigdfelkpgdnbigclccc/frame/Images/spin.gif" class="c12b5a4e69860bc968b47223fd-sound_loader" alt="loader" style="display: none;">
+                </div>
+                <div class="c12b5a4e69860bc968b47223fd-bookmark-item-container c12b5a4e69860bc968b47223fd-position-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="21" viewBox="0 0 22 21" fill="none" class="c12b5a4e69860bc968b47223fd-disable-border c12b5a4e69860bc968b47223fd-red-svg c12b5a4e69860bc968b47223fd-bookmark-icon c12b5a4e69860bc968b47223fd-icon replaced-svg">
+                <path d="M10.0469 2.00105C10.3422 1.0713 11.6578 1.07131 11.9531 2.00106L13.4288 6.64786C13.5615 7.06543 13.9505 7.34806 14.3886 7.34515L19.264 7.31273C20.2395 7.30625 20.646 8.55748 19.853 9.12562L15.8897 11.9651C15.5335 12.2202 15.3849 12.6775 15.5231 13.0933L17.0605 17.7201C17.3681 18.6458 16.3038 19.4191 15.5184 18.8405L11.5932 15.9486C11.2404 15.6887 10.7596 15.6887 10.4068 15.9486L6.48162 18.8405C5.69625 19.4191 4.63188 18.6458 4.93949 17.7201L6.4769 13.0933C6.61506 12.6775 6.46647 12.2202 6.11031 11.9651L2.14698 9.12562C1.35398 8.55749 1.76053 7.30625 2.73602 7.31273L7.61142 7.34515C8.04954 7.34806 8.43854 7.06544 8.57116 6.64786L10.0469 2.00105Z" stroke="#858E99" stroke-width="2"></path>
+                </svg>
+                </div>
+                <div class="c12b5a4e69860bc968b47223fd-vocabulary-icon-container c12b5a4e69860bc968b47223fd-position-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30" fill="none" class="c12b5a4e69860bc968b47223fd-vocabulary-icon c12b5a4e69860bc968b47223fd-red-svg c12b5a4e69860bc968b47223fd-icon replaced-svg">
+                    <path d="M22.5 23.5C22.5 23.2239 22.2761 23 22 23C21.7239 23 21.5 23.2239 21.5 23.5H22.5ZM10 24.5C9.17157 24.5 8.5 23.8284 8.5 23H7.5C7.5 24.3807 8.61929 25.5 10 25.5V24.5ZM8.5 23C8.5 22.1716 9.17157 21.5 10 21.5V20.5C8.61929 20.5 7.5 21.6193 7.5 23H8.5ZM10 25.5H21.5V24.5H10V25.5ZM10 21.5H21.5V20.5H10V21.5ZM22.5 24.5V23.5H21.5V24.5H22.5ZM22.5 20.5V5.5H21.5V20.5H22.5ZM8.5 7C8.5 6.17157 9.17157 5.5 10 5.5V4.5C8.61929 4.5 7.5 5.61929 7.5 7H8.5ZM10 5.5H21.5V4.5H10V5.5ZM7.5 7V23H8.5V7H7.5ZM22.5 5.5C22.5 4.94771 22.0523 4.5 21.5 4.5V5.5H22.5ZM21.5 21.5C22.0523 21.5 22.5 21.0523 22.5 20.5H21.5V21.5ZM21.5 25.5C22.0523 25.5 22.5 25.0523 22.5 24.5H21.5V25.5Z" fill="#858E99"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8 21.5L11 21H22V5H9.82737L8 6V8V21.5ZM15.8846 8V9.73077H13V10.8846H14.7308C14.7309 12.0068 15.0869 13.0457 15.6921 13.8948C15.1099 14.4158 14.3757 14.7703 13.5643 14.8838L13.5548 14.853L13.5514 14.8419L13.5475 14.8311L12.4706 11.8311L11.5257 11.8419L9.52566 17.8419L10.4743 18.1581L10.8604 17H13.1692L13.5221 18.147L14.4779 17.853L13.9071 15.9978C14.8784 15.8267 15.7567 15.3855 16.4616 14.7546C17.3802 15.5768 18.5933 16.0767 19.9231 16.0767V14.9229C18.8889 14.9229 17.9455 14.5342 17.2311 13.8948C17.8363 13.0457 18.1923 12.0068 18.1923 10.8846H19.9231V9.73077H17.0385V8H15.8846ZM12.8615 16L12.6024 15.1581L12.0175 13.5286L11.1937 16H12.8615ZM17.0385 10.8846H16.4615H15.8847C15.8847 11.6459 16.0954 12.358 16.4616 12.9657C16.8278 12.358 17.0385 11.6459 17.0385 10.8846Z" fill="#858E99"></path>
+                    </svg>
+                </div>
+
+            </div>
+
+             <div style="display: none;" class="c12b5a4e69860bc968b47223fd-translate-small-div-bottom">
+                <div class="c12b5a4e69860bc968b47223fd-dictionary-row" style="padding:0;display: block !important;">
+                    <div class="c12b5a4e69860bc968b47223fd-form-control c12b5a4e69860bc968b47223fd-id-lexical-meaning c12b5a4e69860bc968b47223fd-dictionary-div">
+                    </div>
+                </div>
+            </div>
+    
+    </div>
+    </div>
+
+
+
+</body></html>
