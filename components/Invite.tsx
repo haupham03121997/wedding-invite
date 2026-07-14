@@ -11,9 +11,9 @@ const supabase = createClient(
 );
 
 const LINES = [
-  "👩‍❤️‍👨 Mỗi câu chuyện tình yêu đều có một mở đầu đẹp...",
-  "🚀 ...và hành trình của chúng mình sắp bước sang một chương mới. 🎉",
-  "Thật hạnh phúc khi có bạn trong ngày đặc biệt này. 🫰🥰❤️",
+  "👩‍❤️‍👨 Chuyện tình nào cũng có mở đầu đẹp...",
+  "🚀 ...và tụi mình sắp sang chương mới. 🎉",
+  "Thật vui khi có bạn ngày hôm ấy. 🫰🥰❤️",
 ];
 /* Mấy câu mời chạm xoay vòng trên màn chào — càng lầy càng dễ được bấm */
 const TAP_LINES = [
@@ -306,7 +306,7 @@ export default function Invite() {
           </div>
           {/* Nội dung lời chào */}
           <div
-            className={`absolute inset-0 flex flex-col items-center justify-center px-8 text-center transition-opacity duration-300 ${opened ? "opacity-0" : ""
+            className={`absolute inset-0 flex flex-col items-center justify-center px-8 pb-10 text-center transition-opacity duration-300 ${opened ? "opacity-0" : ""
               }`}
           >
             {!started && (
@@ -320,7 +320,7 @@ export default function Invite() {
                 </p>
               </div>
             )}
-            <div className="relative text-lg leading-relaxed font-medium text-black">
+            <div className="relative text-base leading-relaxed font-medium text-black mb-5">
               {/* khối chữ đầy đủ tàng hình giữ chỗ, typed.js gõ đè lên trên: không giật layout */}
               <p className="invisible whitespace-pre-line">{LINES.join("\n")}</p>
               <p className="absolute inset-0 whitespace-pre-line">
@@ -329,13 +329,13 @@ export default function Invite() {
             </div>
 
             <div
-              className={`mt-10 w-full border border-line bg-white/50 px-4   rounded-md py-10 transition-all duration-700 ease-(--ease) ${showCard ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
+              className={`mt-6 w-full border border-line bg-white/50 px-4 rounded-md py-6 transition-all duration-700 ease-(--ease) ${showCard ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 }`}
             >
-              <p className="text-sm tracking-[0.25em] mb-6 text-muted uppercase">
+              <p className="text-sm tracking-[0.25em] mb-3 text-muted uppercase">
                 Thiệp mời lễ cưới
               </p>
-              <p className="mt-4 font-display text-4xl font-bold flex items-center flex-col justify-center gap-2 whitespace-nowrap">
+              <p className="mt-2 font-display text-3xl font-bold flex items-center flex-col justify-center gap-1 whitespace-nowrap">
                 {/* tên cô dâu chú rể hiện dần từ mờ nhòe sang rõ nét, so le nhau */}
                 <span
                   className={`transition-all delay-300 duration-1400 ease-(--ease) ${showCard ? "scale-100 opacity-100 blur-none" : "scale-95 opacity-0 blur-sm"
@@ -346,8 +346,8 @@ export default function Invite() {
                 <Image
                   src="/heart.webp"
                   alt=""
-                  width={80}
-                  height={80}
+                  width={56}
+                  height={56}
                   className={`transition-all delay-1200 duration-500 ease-(--ease) ${showCard ? "scale-100 opacity-100" : "scale-95 opacity-0"
                     }`}
                 />
@@ -358,7 +358,7 @@ export default function Invite() {
                   Thúy Uyên
                 </span>
               </p>
-              <p className="mt-2 font-display text-xl font-medium text-muted italic">
+              <p className="mt-2 font-display text-2xl font-bold text-muted italic">
                 02 . 08 . 2026
               </p>
 
@@ -368,23 +368,23 @@ export default function Invite() {
                 onClick={openInvite}
                 disabled={!showCard}
                 aria-label="Bóc thiệp cưới"
-                className="group mt-9 inline-flex flex-col items-center"
+                className="group mt-5 inline-flex flex-col items-center"
               >
                 <span
-                  className={`relative block h-28 w-28 transition-all duration-500 ease-(--ease) ${opened ? "scale-150 opacity-0" : ""
+                  className={`relative block h-24 w-24 transition-all duration-500 ease-(--ease) ${opened ? "scale-150 opacity-0" : ""
                     }`}
                 >
                   {/* bóng tim lan tỏa sau mỗi nhịp đập */}
                   <HeartIcon className="heart-echo absolute inset-0 h-full w-full text-accent" />
                   <span className="heartbeat absolute inset-0 block">
                     <HeartIcon className="h-full w-full text-accent filter-[drop-shadow(0_4px_12px_rgba(142,59,44,0.4))]" />
-                    <span className="absolute inset-x-0 top-[30%] font-display text-2xl text-paper italic">
+                    <span className="absolute inset-x-0 top-[30%] font-display text-xl text-paper italic">
                       H<span className="mx-0.5 text-lg">&</span>U
                     </span>
                   </span>
                 </span>
                 <span
-                  className={`mt-4 text-base font-medium tracking-wide text-accent transition-opacity duration-300 ${opened ? "opacity-0" : ""
+                  className={`mt-3 text-sm font-medium tracking-wide text-accent transition-opacity duration-300 ${opened ? "opacity-0" : ""
                     }`}
                 >
                   Bóc thiệp cưới
