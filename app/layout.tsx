@@ -34,6 +34,7 @@ export const metadata: Metadata = {
   openGraph: {
     title,
     description,
+    url: PRODUCTION_URL,
     type: "website",
     locale: "vi_VN",
     // Sử dụng URL tuyệt đối và bổ sung các thuộc tính định dạng ảnh cho Messenger
