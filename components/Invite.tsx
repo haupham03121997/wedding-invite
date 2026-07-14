@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Typed from "typed.js";
+import { COUPLE, WEDDING } from "@/lib/wedding";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -41,7 +42,7 @@ const GALLERY = [
   "IMG_5140", "IMG_5274", "IMG_5304", "IMG_5325", "IMG_5364", "IMG_5466",
 ].map((name, i) => ({
   src: `/assets/gallery/${name}.jpg`,
-  alt: `Ảnh cưới Xuân Hậu và Thúy Uyên ${i + 1}`,
+  alt: `Ảnh cưới ${COUPLE} ${i + 1}`,
   w: LANDSCAPE.has(name) ? 5857 : 3905,
   h: LANDSCAPE.has(name) ? 3905 : 5857,
 }));
@@ -71,8 +72,12 @@ const HEARTS: [number, number, number, number, number, number][] = [
   [6, 25, 2.0, 8, 0.2, 1.0],
 ];
 
-const MAPS_URL =
-  "https://maps.app.goo.gl/Qg3LJDuJkExNz5PBA";
+/* Lịch tháng cưới: suy hết từ WEDDING.date để không lệch nhau */
+const wd = WEDDING.date;
+const CAL_LABEL = `Tháng ${String(wd.getMonth() + 1).padStart(2, "0")}, ${wd.getFullYear()}`;
+const CAL_PAD = (new Date(wd.getFullYear(), wd.getMonth(), 1).getDay() + 6) % 7; // offset thứ 2
+const CAL_DAYS = new Date(wd.getFullYear(), wd.getMonth() + 1, 0).getDate();
+const CAL_DAY = wd.getDate();
 
 /* Reveal on scroll */
 function Reveal({
@@ -341,7 +346,7 @@ export default function Invite() {
                   className={`transition-all delay-300 duration-1400 ease-(--ease) ${showCard ? "scale-100 opacity-100 blur-none" : "scale-95 opacity-0 blur-sm"
                     }`}
                 >
-                  Xuân Hậu
+                  {WEDDING.groom}
                 </span>
                 <Image
                   src="/heart.webp"
@@ -355,11 +360,11 @@ export default function Invite() {
                   className={`transition-all delay-700 duration-1400 ease-(--ease) ${showCard ? "scale-100 opacity-100 blur-none" : "scale-95 opacity-0 blur-sm"
                     }`}
                 >
-                  Thúy Uyên
+                  {WEDDING.bride}
                 </span>
               </p>
               <p className="mt-2 font-display text-2xl font-bold text-muted italic">
-                02 . 08 . 2026
+                {WEDDING.dateDisplay}
               </p>
 
               {/* Trái tim đập: chạm để bóc thiệp */}
@@ -379,7 +384,9 @@ export default function Invite() {
                   <span className="heartbeat absolute inset-0 block">
                     <HeartIcon className="h-full w-full text-accent filter-[drop-shadow(0_4px_12px_rgba(142,59,44,0.4))]" />
                     <span className="absolute inset-x-0 top-[30%] font-display text-xl text-paper italic">
-                      H<span className="mx-0.5 text-lg">&</span>U
+                      {WEDDING.initials[0]}
+                      <span className="mx-0.5 text-lg">&</span>
+                      {WEDDING.initials[1]}
                     </span>
                   </span>
                 </span>
@@ -422,7 +429,7 @@ export default function Invite() {
       <section className="relative flex h-dvh items-end overflow-hidden">
         <Image
           src="/assets/cover.jpg"
-          alt="Xuân Hậu và Thúy Uyên trong trang phục cưới"
+          alt={`${COUPLE} trong trang phục cưới`}
           fill
           priority
           sizes="430px"
@@ -444,13 +451,13 @@ export default function Invite() {
                 style={{ animationDelay: "450ms" }}
               >
                 {/* {" "} bắt buộc: JSX xoá khoảng trắng giữa các span, mất điểm xuống dòng */}
-                <span className="whitespace-nowrap">Xuân Hậu</span>{" "}
+                <span className="whitespace-nowrap">{WEDDING.groom}</span>{" "}
                 <br />
                 <p className="text-[2.25rem] italic">&</p>{" "}
-                <span className="whitespace-nowrap">Thúy Uyên</span>
+                <span className="whitespace-nowrap">{WEDDING.bride}</span>
               </h1>
               <p className="rise mt-3 text-[17px] text-paper/85" style={{ animationDelay: "650ms" }}>
-                Chủ Nhật, ngày 02 tháng 08 năm 2026
+                {WEDDING.dateFull}
               </p>
             </>
           )}
@@ -536,17 +543,11 @@ export default function Invite() {
 
         <Reveal>
           <div className="text-center">
-            <h3 className="font-display text-[1.75rem]">Lễ Vu Quy</h3>
-            <p className="mt-1 text-sm text-muted">Nhà gái</p>
-            <p className="mt-4 text-base leading-relaxed">
-              {/* TODO: điền họ tên đầy đủ của mẹ cô dâu */}
-              Nhà gái: Bà Nguyễn Văn A
-            </p>
-            {/* TODO: chỉnh lại giờ làm lễ nếu cần */}
-            <p className="mt-1 text-base">09:00, Chủ Nhật ngày 02.08.2026</p>
-            <p className="mt-1 text-base text-muted">
-              Tư gia nhà gái, Thôn Vĩnh Thiện, Xã Bù Đăng, Tp.Đồng Nai
-            </p>
+            <h3 className="font-display text-[1.75rem]">{WEDDING.ceremony.title}</h3>
+            <p className="mt-1 text-sm text-muted">{WEDDING.ceremony.side}</p>
+            <p className="mt-4 text-base leading-relaxed">{WEDDING.ceremony.hosts}</p>
+            <p className="mt-1 text-base">{WEDDING.ceremony.time}</p>
+            <p className="mt-1 text-base text-muted">{WEDDING.ceremony.address}</p>
           </div>
         </Reveal>
 
@@ -568,7 +569,7 @@ export default function Invite() {
 
         <Reveal className="mt-8">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d601.3922690187136!2d107.24177221117876!3d11.803831276222764!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3173770645bbd2b1%3A0x5791ebcd405e4e46!2sM%E1%BB%99c%20An%20Spa%20%26%20PhysioTherapy!5e1!3m2!1svi!2sus!4v1784011076202!5m2!1svi!2sus"
+            src={WEDDING.mapsEmbed}
             title="Bản đồ đến địa điểm hôn lễ"
             className="h-80 w-full rounded-xl border-0"
             allowFullScreen
@@ -579,7 +580,7 @@ export default function Invite() {
 
         <Reveal className="mt-6 text-center">
           <a
-            href={MAPS_URL}
+            href={WEDDING.mapsUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex min-h-12 items-center justify-center rounded-full border border-accent px-8 text-base font-medium text-accent transition-colors duration-200 hover:bg-accent hover:text-paper"
@@ -590,22 +591,21 @@ export default function Invite() {
 
         {/* Lịch tháng 08.2026 */}
         <Reveal className="mt-12">
-          <p className="text-center font-display text-2xl">Tháng 08, 2026</p>
+          <p className="text-center font-display text-2xl">{CAL_LABEL}</p>
           <div className="mt-5 grid grid-cols-7 gap-y-2 text-center text-base">
             {["T2", "T3", "T4", "T5", "T6", "T7", "CN"].map((d) => (
               <span key={d} className={d === "CN" ? "font-medium text-accent" : "text-muted"}>
                 {d}
               </span>
             ))}
-            {/* 01.08.2026 rơi vào thứ Bảy */}
-            {Array.from({ length: 5 }).map((_, i) => (
+            {Array.from({ length: CAL_PAD }).map((_, i) => (
               <span key={`pad-${i}`} />
             ))}
-            {Array.from({ length: 31 }, (_, i) => i + 1).map((day) =>
-              day === 2 ? (
+            {Array.from({ length: CAL_DAYS }, (_, i) => i + 1).map((day) =>
+              day === CAL_DAY ? (
                 <span key={day} className="flex justify-center">
                   <span className="pulse-ring inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent font-medium text-paper">
-                    2
+                    {day}
                   </span>
                 </span>
               ) : (
@@ -854,7 +854,7 @@ export default function Invite() {
       <footer className="relative flex min-h-[70dvh] items-end overflow-hidden">
         <Image
           src="/assets/footer.jpg"
-          alt="Xuân Hậu và Thúy Uyên chạm trán sau chiếc quạt, nền đỏ trầm"
+          alt={`${COUPLE} chạm trán sau chiếc quạt, nền đỏ trầm`}
           fill
           sizes="430px"
           className="object-cover"
@@ -863,10 +863,10 @@ export default function Invite() {
         <div className="relative w-full px-8 pb-14 text-center text-paper">
           <Reveal>
             <p className="font-display text-4xl">
-              Hậu <span className="italic">&</span> Uyên
+              {WEDDING.groomShort} <span className="italic">&</span> {WEDDING.brideShort}
             </p>
             <p className="mt-2 font-display text-lg font-medium text-paper/80 italic">
-              02 . 08 . 2026
+              {WEDDING.dateDisplay}
             </p>
             <p className="mt-5 text-base text-paper/90">
               Rất hân hạnh được đón tiếp bạn!

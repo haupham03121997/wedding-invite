@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Be_Vietnam_Pro, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+import { COUPLE, WEDDING } from "@/lib/wedding";
 
 const cormorant = Cormorant_Garamond({
   variable: "--font-cormorant",
@@ -15,12 +16,11 @@ const beVietnam = Be_Vietnam_Pro({
   weight: ["400", "500"],
 });
 
-const title = "Xuân Hậu & Thúy Uyên | 02.08.2026";
-const description =
-  "Trân trọng kính mời bạn đến chung vui cùng gia đình chúng tôi trong ngày cưới của Xuân Hậu và Thúy Uyên, Chủ Nhật ngày 04 tháng 10 năm 2026.";
+const title = `${COUPLE} | ${WEDDING.dateShort}`;
+const description = `Trân trọng kính mời bạn đến chung vui cùng gia đình chúng tôi trong ngày cưới của ${COUPLE}, ${WEDDING.dateFull}.`;
 
 // Khai báo URL Production chính thức của bạn để Messenger dễ nhận diện
-const PRODUCTION_URL = "https://xuanhau-thuyuyen-wedding-invitions.vercel.app";
+const PRODUCTION_URL = WEDDING.productionUrl;
 
 export const metadata: Metadata = {
   /* Vercel tự cấp VERCEL_PROJECT_PRODUCTION_URL lúc build; local dùng localhost */
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         type: "image/jpeg",
-        alt: "Ảnh cưới Xuân Hậu & Thúy Uyên",
+        alt: `Ảnh cưới ${COUPLE}`,
       },
     ],
   },
