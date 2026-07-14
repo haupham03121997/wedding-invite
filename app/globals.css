@@ -273,3 +273,17 @@ button:active {
     transition: none;
   }
 }
+
+/* ponytail: iOS Safari < 16.4 không hiểu đơn vị dvh → các khối h-dvh sập về 0,
+   màn chào vỡ layout. Fallback về vh cho đúng các class đang dùng. */
+@supports not (height: 1dvh) {
+  .h-dvh {
+    height: 100vh;
+  }
+  .min-h-dvh {
+    min-height: 100vh;
+  }
+  .min-h-\[70dvh\] {
+    min-height: 70vh;
+  }
+}

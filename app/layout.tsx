@@ -19,6 +19,9 @@ const title = "Xuân Hậu & Thúy Uyên | 02.08.2026";
 const description =
   "Trân trọng kính mời bạn đến chung vui cùng gia đình chúng tôi trong ngày cưới của Xuân Hậu và Thúy Uyên, Chủ Nhật ngày 04 tháng 10 năm 2026.";
 
+// Khai báo URL Production chính thức của bạn để Messenger dễ nhận diện
+const PRODUCTION_URL = "https://xuanhau-thuyuyen-wedding-invitions.vercel.app";
+
 export const metadata: Metadata = {
   /* Vercel tự cấp VERCEL_PROJECT_PRODUCTION_URL lúc build; local dùng localhost */
   metadataBase: new URL(
@@ -33,13 +36,22 @@ export const metadata: Metadata = {
     description,
     type: "website",
     locale: "vi_VN",
-    images: [{ url: "/og.jpg", width: 1200, height: 630 }],
+    // Sử dụng URL tuyệt đối và bổ sung các thuộc tính định dạng ảnh cho Messenger
+    images: [
+      {
+        url: `${PRODUCTION_URL}/og.jpg`,
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: "Ảnh cưới Xuân Hậu & Thúy Uyên",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/og.jpg"],
+    images: [`${PRODUCTION_URL}/og.jpg`],
   },
 };
 
