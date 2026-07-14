@@ -100,29 +100,50 @@ button:active {
   animation-play-state: paused;
 }
 
-/* Pulse ring on the open button and the wedding day */
-.pulse-ring {
-  position: relative;
+/* Lịch — ngày cưới: tim tự vẽ nét quanh số, tô màu, rồi mới bắt đầu đập.
+   Trạng thái chờ nằm ở class gốc, .reveal-in của Reveal bao ngoài kích hoạt chuỗi */
+/* currentColor + class text-accent: @theme inline không emit biến --color-accent ra :root */
+.cal-heart-path {
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  fill: currentColor;
+  fill-opacity: 0;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
 }
-.pulse-ring::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 9999px;
-  border: 1px solid var(--color-accent);
-  animation: ring 2.4s var(--ease) infinite;
-  pointer-events: none;
+.reveal-in .cal-heart-path {
+  animation: heart-draw 1.3s var(--ease) 0.5s forwards,
+    heart-fill 0.6s ease-out 1.7s forwards;
 }
-@keyframes ring {
-  0% {
-    transform: scale(1);
-    opacity: 0.7;
+@keyframes heart-draw {
+  to {
+    stroke-dashoffset: 0;
   }
-  70%,
-  100% {
-    transform: scale(1.45);
-    opacity: 0;
+}
+@keyframes heart-fill {
+  to {
+    fill-opacity: 1;
   }
+}
+.cal-heart-day {
+  opacity: 0;
+}
+.reveal-in .cal-heart-day {
+  animation: rise 0.5s var(--ease) 1.9s both;
+}
+.cal-heart-beat {
+  transform-origin: 50% 55%;
+}
+.reveal-in .cal-heart-beat {
+  animation: heartbeat 1.6s ease-in-out 2.5s infinite;
+}
+.cal-heart-echo {
+  opacity: 0;
+  transform-origin: 50% 55%;
+}
+.reveal-in .cal-heart-echo {
+  animation: heart-echo 1.6s var(--ease) 2.5s infinite;
 }
 
 /* Trái tim bóc thiệp: nhịp đập lub-dub + bóng tim lan tỏa */
@@ -160,39 +181,6 @@ button:active {
   100% {
     transform: scale(1.7);
     opacity: 0;
-  }
-}
-
-/* Màn chào: bàn tay gõ gõ vào màn hình + câu mời chạm nhảy vào */
-.tap-hand {
-  display: inline-block;
-  transform-origin: 50% 80%;
-  animation: tap-hand 1.2s var(--ease) infinite;
-}
-@keyframes tap-hand {
-  0%,
-  60%,
-  100% {
-    transform: translateY(0);
-  }
-  20% {
-    transform: translateY(-12px) rotate(-6deg);
-  }
-  40% {
-    transform: translateY(3px) scale(0.92);
-  }
-}
-.line-pop {
-  animation: line-pop 0.45s var(--ease) both;
-}
-@keyframes line-pop {
-  from {
-    opacity: 0;
-    transform: translateY(10px) scale(0.97);
-  }
-  to {
-    opacity: 1;
-    transform: none;
   }
 }
 
@@ -252,15 +240,24 @@ button:active {
   .kenburns,
   .rise,
   .spin,
-  .pulse-ring::after,
   .heartbeat,
   .heart-echo,
   .fall-heart,
-  .tap-hand,
-  .line-pop {
+  .cal-heart-path,
+  .cal-heart-day,
+  .cal-heart-beat,
+  .cal-heart-echo {
     animation: none !important;
   }
   .rise {
+    opacity: 1;
+  }
+  /* Giảm chuyển động: tim hiện sẵn ở trạng thái cuối, số vẫn đọc được */
+  .cal-heart-path {
+    stroke-dashoffset: 0;
+    fill-opacity: 1;
+  }
+  .cal-heart-day {
     opacity: 1;
   }
   .reveal {

@@ -3,7 +3,6 @@
 import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import Typed from "typed.js";
 import { COUPLE, WEDDING } from "@/lib/wedding";
 
 const supabase = createClient(
@@ -11,19 +10,6 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
 );
 
-const LINES = [
-  "👩‍❤️‍👨 Chuyện tình nào cũng có mở đầu đẹp...",
-  "🚀 ...và tụi mình sắp sang chương mới. 🎉",
-  "Thật vui khi có bạn ngày hôm ấy. 🫰🥰❤️",
-];
-/* Mấy câu mời chạm xoay vòng trên màn chào — càng lầy càng dễ được bấm */
-const TAP_LINES = [
-  "Chạm vào màn hình để nhận thiệp 💌",
-  "Thiệp này không tự mở được đâu 👀",
-  "Chạm nhẹ thôi nha, thiệp dễ rách lắm 🥺",
-  "Hong chạm là tụi mình giận đó 😤",
-  "Chạm đi chờ chi! 🫵",
-];
 /* Vibe cho lời chúc + emoji thả nhanh vào ô lời chúc */
 const VIBES: [string, string][] = [
   ["🎉", "Vui vẻ"],
@@ -140,55 +126,20 @@ function Heading({ children }: { children: ReactNode }) {
 
 export default function Invite() {
   const [showCard, setShowCard] = useState(false);
-  const [started, setStarted] = useState(false);
   const [opened, setOpened] = useState(false);
   const [gateGone, setGateGone] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
-  const [tapIdx, setTapIdx] = useState(0);
   const [wish, setWish] = useState("");
   const [wishes, setWishes] = useState<Wish[]>([]);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const typedRef = useRef<HTMLSpanElement>(null);
 
-  /* Typing effect on the welcome gate (typed.js) + tiếng gõ phím WebAudio */
+  /* Thiệp hiện ngay khi vào trang — nhún 300ms cho phong bì kịp vẽ xong */
   useEffect(() => {
-    const el = typedRef.current;
-    if (!el) return;
-    /* Trình duyệt chặn âm thanh trước khi người dùng chạm, nên chờ lần chạm
-       đầu tiên rồi mới bắt đầu gõ chữ + tiếng gõ phím — luôn đồng bộ với nhau */
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const keyAudio = new Audio("/typing.mp3");
-    keyAudio.loop = true;
-    keyAudio.volume = 0.6;
-    let typed: Typed | undefined;
-    const start = () => {
-      setStarted(true);
-      if (reduced) {
-        el.textContent = LINES.join("\n");
-        setShowCard(true);
-        return;
-      }
-      keyAudio.play().catch(() => { });
-      typed = new Typed(el, {
-        strings: [LINES.join("\n")],
-        typeSpeed: 18,
-        startDelay: 300,
-        onComplete: () => {
-          keyAudio.pause();
-          setTimeout(() => setShowCard(true), 400);
-        },
-      });
-    };
-    window.addEventListener("pointerdown", start, { once: true });
-
-    return () => {
-      keyAudio.pause();
-      typed?.destroy();
-      window.removeEventListener("pointerdown", start);
-    };
+    const t = setTimeout(() => setShowCard(true), 300);
+    return () => clearTimeout(t);
   }, []);
 
   /* Tải sổ lưu bút: chỉ lấy các dòng có lời chúc, mới nhất trước */
@@ -202,13 +153,6 @@ export default function Invite() {
       .limit(30)
       .then(({ data }) => setWishes(data ?? []));
   }, []);
-
-  /* Xoay vòng câu mời chạm cho tới khi khách chịu chạm */
-  useEffect(() => {
-    if (started) return;
-    const id = setInterval(() => setTapIdx((i) => (i + 1) % TAP_LINES.length), 2600);
-    return () => clearInterval(id);
-  }, [started]);
 
   /* Lock scroll while the gate is closed */
   useEffect(() => {
@@ -314,25 +258,6 @@ export default function Invite() {
             className={`absolute inset-0 flex flex-col items-center justify-center px-8 pb-10 text-center transition-opacity duration-300 ${opened ? "opacity-0" : ""
               }`}
           >
-            {!started && (
-              <div className="absolute inset-x-0 top-1/2 flex -translate-y-1/2 flex-col items-center gap-4 px-8">
-                <span className="tap-hand text-5xl" aria-hidden="true">
-                  👆
-                </span>
-                {/* key đổi theo câu → React thay phần tử → animation pop chạy lại */}
-                <p key={tapIdx} className="line-pop text-base font-medium text-muted">
-                  {TAP_LINES[tapIdx]}
-                </p>
-              </div>
-            )}
-            <div className="relative text-base leading-relaxed font-medium text-black mb-5">
-              {/* khối chữ đầy đủ tàng hình giữ chỗ, typed.js gõ đè lên trên: không giật layout */}
-              <p className="invisible whitespace-pre-line">{LINES.join("\n")}</p>
-              <p className="absolute inset-0 whitespace-pre-line">
-                <span ref={typedRef} />
-              </p>
-            </div>
-
             <div
               className={`mt-6 w-full border border-line bg-white/50 px-4 rounded-md py-6 transition-all duration-700 ease-(--ease) ${showCard ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
                 }`}
@@ -603,9 +528,26 @@ export default function Invite() {
             ))}
             {Array.from({ length: CAL_DAYS }, (_, i) => i + 1).map((day) =>
               day === CAL_DAY ? (
+                /* Ngày cưới: trái tim tự vẽ nét → tô màu → đập nhịp, chạy khi lịch cuộn vào tầm nhìn */
                 <span key={day} className="flex justify-center">
-                  <span className="pulse-ring inline-flex h-10 w-10 items-center justify-center rounded-full bg-accent font-medium text-paper">
-                    {day}
+                  <span className="relative -my-1 h-12 w-12">
+                    <HeartIcon className="cal-heart-echo absolute inset-0 h-full w-full text-accent" />
+                    <span className="cal-heart-beat absolute inset-0 block">
+                      <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        className="h-full w-full text-accent filter-[drop-shadow(0_3px_8px_rgba(142,59,44,0.35))]"
+                      >
+                        <path
+                          pathLength={1}
+                          className="cal-heart-path"
+                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                        />
+                      </svg>
+                      <span className="cal-heart-day absolute inset-0 flex items-center justify-center pb-1.5 text-sm font-medium text-paper">
+                        {day}
+                      </span>
+                    </span>
                   </span>
                 </span>
               ) : (
