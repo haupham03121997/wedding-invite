@@ -1,21 +1,95 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-paper: #faf7f2;
-  --color-ink: #2c2724;
-  --color-muted: #675e55;
-  --color-accent: #8e3b2c;
-  --color-line: #e7dfd4;
+  --color-paper: var(--paper);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-line: var(--line);
+  --color-alt: var(--alt);
+  --color-field: var(--field);
   --font-display: var(--font-cormorant);
   --font-body: var(--font-beviet);
+  --font-script: var(--font-shelia);
 }
 
+/* ============================================================
+   TÔNG MÀU THIỆP — đổi qua data-theme trên <html>.
+   Mỗi theme chỉ định nghĩa 9 biến; mọi màu khác suy ra từ đây.
+   ============================================================ */
 :root {
   --ease: cubic-bezier(0.23, 1, 0.32, 1);
+
+  /* Mộc (mặc định): nâu đất ấm */
+  --paper: #faf7f2;
+  --ink: #2c2724;
+  --muted: #675e55;
+  --accent: #8e3b2c;
+  --line: #e7dfd4;
+  --alt: #f3ece2; /* nền section xen kẽ */
+  --field: #fffdf9; /* nền ô nhập liệu */
+  --body: #eae4da; /* nền ngoài khung điện thoại */
+  --shade: #1c1512; /* màu tối cho gradient đè lên ảnh */
+
+  /* Bóng/tỏa sáng theo màu accent — dùng chung mọi theme */
+  --accent-glow: color-mix(in srgb, var(--accent) 40%, transparent);
+  --accent-glow-soft: color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+/* Đỏ đô: rượu vang trầm, hợp bộ ảnh cổ phục nền đỏ */
+[data-theme="dodo"] {
+  --paper: #fbf6f3;
+  --ink: #2e2224;
+  --muted: #6d5a5c;
+  --accent: #7a1f2b;
+  --line: #ecdcd8;
+  --alt: #f6e9e6;
+  --field: #fffcfb;
+  --body: #ecdfda;
+  --shade: #250e12;
+}
+
+/* Hồng phấn: dịu ngọt, hợp bộ ảnh vest kem hoa hồng */
+[data-theme="hong"] {
+  --paper: #fdf7f6;
+  --ink: #322629;
+  --muted: #70595e;
+  --accent: #a34d63;
+  --line: #f0dcdc;
+  --alt: #f9ebe9;
+  --field: #fffcfc;
+  --body: #f2e3e1;
+  --shade: #241318;
+}
+
+/* Xanh rêu: mộc mạc vườn cây */
+[data-theme="reu"] {
+  --paper: #f8f8f2;
+  --ink: #262a25;
+  --muted: #5c655c;
+  --accent: #48604b;
+  --line: #e0e4d6;
+  --alt: #edf0e3;
+  --field: #fdfdf8;
+  --body: #e4e7da;
+  --shade: #131a14;
+}
+
+/* Xanh đêm: navy cổ điển, hợp bộ ảnh vest đen */
+[data-theme="dem"] {
+  --paper: #f7f8f9;
+  --ink: #232830;
+  --muted: #5a6470;
+  --accent: #33506b;
+  --line: #dde3e9;
+  --alt: #eaeff3;
+  --field: #fcfdfe;
+  --body: #e2e7ec;
+  --shade: #0f1722;
 }
 
 body {
-  background: #eae4da;
+  background: var(--body);
   color: var(--color-ink);
   font-family: var(--font-beviet);
 }
@@ -73,6 +147,36 @@ button:active {
   animation: kenburns 9s var(--ease) forwards;
 }
 
+/* Màn chào tự chạy bằng CSS thuần: trạng thái ẩn nằm trong keyframes (fill both)
+   chứ không nằm ở class, nên máy cũ lỡ không chạy được JS vẫn đọc được lời chào */
+.intro-rise {
+  animation: rise 0.9s var(--ease) 0.3s both;
+}
+.intro-blur {
+  animation: intro-blur 1.4s var(--ease) both;
+}
+@keyframes intro-blur {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+.intro-pop {
+  animation: intro-pop 0.5s var(--ease) 1.5s both;
+}
+@keyframes intro-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -85,6 +189,116 @@ button:active {
 }
 .rise {
   animation: rise 0.9s var(--ease) both;
+}
+
+/* Sổ lưu bút kiểu chat livestream: hai bản sao xếp chồng, cuộn lên -50% rồi lặp
+   nên nối vòng không thấy mối; chạm/hover thì dừng để đọc */
+.chat-scroll {
+  animation: chat-scroll var(--dur, 40s) linear infinite;
+}
+.chat-scroll:hover,
+.chat-scroll:active {
+  animation-play-state: paused;
+}
+@keyframes chat-scroll {
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+/* Pháo tim mừng lời chúc vừa gửi: bung lên một lần rồi tan */
+.burst-heart {
+  position: absolute;
+  bottom: 0;
+  width: 8px;
+  height: 8px;
+  background: color-mix(in srgb, var(--accent) 80%, transparent);
+  rotate: -45deg;
+  animation: heart-burst 1.2s var(--ease) both;
+}
+.burst-heart::before,
+.burst-heart::after {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: inherit;
+  border-radius: 50%;
+}
+.burst-heart::before {
+  top: -4px;
+}
+.burst-heart::after {
+  left: 4px;
+}
+@keyframes heart-burst {
+  0% {
+    opacity: 0;
+    transform: translateY(12px) scale(calc(var(--s, 1) * 0.4));
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-110px) scale(var(--s, 1));
+  }
+}
+
+/* Ảnh story trôi chậm hơn nền khi cuộn (scroll-driven animation).
+   Phóng 1.12 để có phần dư, trình duyệt chưa hỗ trợ thì ảnh đứng yên như cũ */
+@supports (animation-timeline: view()) {
+  .parallax {
+    animation: parallax linear both;
+    animation-timeline: view();
+  }
+  @keyframes parallax {
+    from {
+      transform: translateY(-5%) scale(1.12);
+    }
+    to {
+      transform: translateY(5%) scale(1.12);
+    }
+  }
+}
+
+/* Gallery: hai cột masonry trôi lệch tốc độ khi cuộn, biên độ nhỏ đủ cảm nhận */
+@supports (animation-timeline: view()) {
+  .drift-a {
+    animation: drift-a linear both;
+    animation-timeline: view();
+  }
+  .drift-b {
+    animation: drift-b linear both;
+    animation-timeline: view();
+  }
+  @keyframes drift-a {
+    from {
+      transform: translateY(14px);
+    }
+    to {
+      transform: translateY(-14px);
+    }
+  }
+  @keyframes drift-b {
+    from {
+      transform: translateY(-10px);
+    }
+    to {
+      transform: translateY(18px);
+    }
+  }
+}
+
+/* Lightbox album */
+dialog.lightbox[open] {
+  animation: lightbox-in 0.25s var(--ease);
+}
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
 }
 
 /* Music disc */
@@ -190,10 +404,10 @@ button:active {
   top: -20px;
   width: 6px;
   height: 6px;
-  background: rgba(142, 59, 44, 0.5);
+  background: color-mix(in srgb, var(--accent) 50%, transparent);
   rotate: -45deg;
-  filter: drop-shadow(0 0 6px rgba(142, 59, 44, 0.7))
-    drop-shadow(0 0 12px rgba(197, 123, 87, 0.5));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 70%, transparent))
+    drop-shadow(0 0 12px color-mix(in srgb, var(--accent) 35%, transparent));
   animation: heart-fall linear infinite, heart-beat ease-in-out infinite;
 }
 .fall-heart::before,
@@ -237,6 +451,39 @@ button:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* Giảm chuyển động: tắt cuộn, giấu bản sao, cho cuộn tay */
+  .chat-scroll {
+    animation: none !important;
+  }
+  .chat-scroll > [aria-hidden="true"] {
+    display: none;
+  }
+  .chat-viewport {
+    overflow-y: auto !important;
+  }
+  /* Comment nổi mà không trôi chỉ là lớp che nội dung → giấu hẳn */
+  .live-chat-overlay {
+    display: none;
+  }
+  .burst-heart {
+    animation: none !important;
+    opacity: 0;
+  }
+  dialog.lightbox[open] {
+    animation: none !important;
+  }
+  .parallax,
+  .drift-a,
+  .drift-b {
+    animation: none !important;
+  }
+  /* Giảm chuyển động: intro hiện thẳng ở trạng thái cuối (base style vốn là hiện) */
+  .intro-rise,
+  .intro-blur,
+  .intro-pop {
+    animation: none !important;
+  }
+
   .kenburns,
   .rise,
   .spin,

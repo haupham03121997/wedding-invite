@@ -1,9 +1,9 @@
 "use client";
 
+import { COUPLE, WEDDING } from "@/lib/wedding";
 import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { COUPLE, WEDDING } from "@/lib/wedding";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -19,6 +19,17 @@ const VIBES: [string, string][] = [
 ];
 const WISH_EMOJIS = ["❤️", "🥰", "💍", "🎊", "🍾", "😘"];
 
+/* Tông màu thiệp: màu sắc định nghĩa trong globals.css ([data-theme]),
+   ở đây chỉ chọn ảnh bìa/ảnh cuối hợp không khí từng tông */
+const THEMES = [
+  { id: "moc", label: "Mộc mạc", cover: "/assets/cover.jpg", footer: "/assets/footer.jpg" },
+  { id: "dodo", label: "Đỏ đô", cover: "/assets/gallery/IMG_3817.jpg", footer: "/assets/footer.jpg" },
+  { id: "hong", label: "Hồng phấn", cover: "/assets/gallery/IMG_4365.jpg", footer: "/assets/gallery/IMG_4572.jpg" },
+  { id: "reu", label: "Xanh rêu", cover: "/assets/gallery/IMG_4998.jpg", footer: "/assets/gallery/IMG_5274.jpg" },
+  { id: "dem", label: "Xanh đêm", cover: "/assets/gallery/IMG_5304.jpg", footer: "/assets/gallery/IMG_5364.jpg" },
+] as const;
+type ThemeId = (typeof THEMES)[number]["id"];
+
 type Wish = { id: number; name: string; vibe: string; wish: string | null };
 const LANDSCAPE = new Set(["IMG_4185", "IMG_4412", "IMG_4703", "IMG_5140"]);
 const GALLERY = [
@@ -33,6 +44,28 @@ const GALLERY = [
   h: LANDSCAPE.has(name) ? 3905 : 5857,
 }));
 const GALLERY_PREVIEW = 6;
+
+/* Chia gallery thành nhịp magazine: ảnh dọc gom vào cụm masonry 2 cột,
+   gặp ảnh ngang thì cho tràn full chiều ngang làm khoảng thở.
+   Giữ index gốc (gi) để lightbox mở đúng ảnh. */
+type GalleryEntry = { img: (typeof GALLERY)[number]; gi: number };
+const GALLERY_ROWS = (() => {
+  const rows: ({ type: "chunk"; items: GalleryEntry[] } | ({ type: "wide" } & GalleryEntry))[] = [];
+  let chunk: GalleryEntry[] = [];
+  GALLERY.forEach((img, gi) => {
+    if (img.w > img.h) {
+      if (chunk.length) {
+        rows.push({ type: "chunk", items: chunk });
+        chunk = [];
+      }
+      rows.push({ type: "wide", img, gi });
+    } else {
+      chunk.push({ img, gi });
+    }
+  });
+  if (chunk.length) rows.push({ type: "chunk", items: chunk });
+  return rows;
+})();
 
 /* [left%, thời gian rơi s, nhịp đập s, delay rơi s, delay đập s, cỡ tim] */
 const HEARTS: [number, number, number, number, number, number][] = [
@@ -60,10 +93,73 @@ const HEARTS: [number, number, number, number, number, number][] = [
 
 /* Lịch tháng cưới: suy hết từ WEDDING.date để không lệch nhau */
 const wd = WEDDING.date;
-const CAL_LABEL = `Tháng ${String(wd.getMonth() + 1).padStart(2, "0")}, ${wd.getFullYear()}`;
 const CAL_PAD = (new Date(wd.getFullYear(), wd.getMonth(), 1).getDay() + 6) % 7; // offset thứ 2
 const CAL_DAYS = new Date(wd.getFullYear(), wd.getMonth() + 1, 0).getDate();
 const CAL_DAY = wd.getDate();
+const CAL_WEEKDAY = ["Chủ Nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"][wd.getDay()];
+const CAL_DM = `Ngày ${String(CAL_DAY).padStart(2, "0")} Tháng ${String(wd.getMonth() + 1).padStart(2, "0")}`;
+
+/* Pháo tim khi gửi lời chúc: [left%, delay s, thời gian s, cỡ] — bung một lần rồi tan */
+const BURST: [number, number, number, number][] = [
+  [8, 0.05, 1.1, 0.7],
+  [18, 0.3, 1.3, 1.0],
+  [28, 0.0, 0.9, 0.6],
+  [38, 0.45, 1.2, 1.2],
+  [46, 0.15, 1.0, 0.8],
+  [54, 0.55, 1.4, 0.7],
+  [62, 0.1, 1.1, 1.1],
+  [72, 0.4, 1.2, 0.9],
+  [82, 0.2, 1.0, 1.2],
+  [92, 0.5, 1.3, 0.8],
+  [33, 0.65, 1.1, 0.6],
+  [67, 0.7, 1.0, 0.7],
+];
+
+/* Mốc đếm ngược: ngày cưới + giờ làm lễ */
+const [CD_H, CD_MIN] = WEDDING.ceremony.hour.split(":").map(Number);
+const CD_TARGET = new Date(wd.getFullYear(), wd.getMonth(), wd.getDate(), CD_H, CD_MIN).getTime();
+
+function Countdown() {
+  /* null tới khi mount xong: server không biết giờ client, tránh lệch hydration */
+  const [left, setLeft] = useState<number | null>(null);
+
+  useEffect(() => {
+    const tick = () => setLeft(Math.max(0, CD_TARGET - Date.now()));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (left === 0) {
+    return (
+      <p className="text-center font-display text-2xl italic">
+        Ngày chung đôi đã tới 🎉
+      </p>
+    );
+  }
+
+  const cells: [number, string][] = left === null
+    ? []
+    : [
+      [Math.floor(left / 86400000), "Ngày"],
+      [Math.floor(left / 3600000) % 24, "Giờ"],
+      [Math.floor(left / 60000) % 60, "Phút"],
+      [Math.floor(left / 1000) % 60, "Giây"],
+    ];
+
+  return (
+    <div className="grid min-h-20 grid-cols-4 gap-2">
+      {cells.map(([n, label]) => (
+        <div key={label} className="rounded-xl border border-line bg-field py-3 text-center">
+          <p className="font-display font-bold text-4xl leading-none text-accent">
+            {String(n).padStart(2, "0")}
+          </p>
+          <p className="mt-1.5 text-xs tracking-widest text-muted uppercase">{label}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 /* Reveal on scroll */
 function Reveal({
@@ -96,6 +192,7 @@ function Reveal({
     return () => io.disconnect();
   }, []);
 
+
   return (
     <div
       ref={ref}
@@ -125,7 +222,6 @@ function Heading({ children }: { children: ReactNode }) {
 }
 
 export default function Invite() {
-  const [showCard, setShowCard] = useState(false);
   const [opened, setOpened] = useState(false);
   const [gateGone, setGateGone] = useState(false);
   const [playing, setPlaying] = useState(false);
@@ -134,13 +230,152 @@ export default function Invite() {
   const [sending, setSending] = useState(false);
   const [wish, setWish] = useState("");
   const [wishes, setWishes] = useState<Wish[]>([]);
+  const [themeId, setThemeId] = useState<ThemeId>("moc");
   const audioRef = useRef<HTMLAudioElement>(null);
+  const theme = THEMES.find((t) => t.id === themeId) ?? THEMES[0];
 
-  /* Thiệp hiện ngay khi vào trang — nhún 300ms cho phong bì kịp vẽ xong */
+  /* Comment nổi kiểu livestream: bật mặc định, nhớ lựa chọn của khách */
+  const [liveChat, setLiveChat] = useState(true);
+  /* Link mời riêng: ?to=Tên → phong bì đề tên khách, form điền sẵn */
+  const [guest, setGuest] = useState("");
+
+  /* Khôi phục tùy chọn đã lưu + tên khách từ link mời, một lần sau hydrate.
+     localStorage/URL chỉ đọc được ở client nên không thể nằm trong state khởi tạo
+     (server render sẽ lệch) — setState một lần trong effect ở đây là chủ đích. */
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
-    const t = setTimeout(() => setShowCard(true), 300);
-    return () => clearTimeout(t);
+    const saved = localStorage.getItem("theme");
+    if (THEMES.some((t) => t.id === saved)) setThemeId(saved as ThemeId);
+    if (localStorage.getItem("liveChat") === "off") setLiveChat(false);
+    const to = new URLSearchParams(window.location.search).get("to");
+    if (to?.trim()) setGuest(to.trim().slice(0, 40));
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
+
+  const pickTheme = (id: ThemeId) => setThemeId(id);
+
+  /* Đồng bộ theme ra DOM + localStorage khi đổi. Lần chạy đầu bỏ qua:
+     data-theme đã được script trong layout đặt đúng trước khi vẽ, ghi đè sẽ chớp màu */
+  const themeSynced = useRef(false);
+  useEffect(() => {
+    if (!themeSynced.current) {
+      themeSynced.current = true;
+      return;
+    }
+    document.documentElement.dataset.theme = themeId;
+    localStorage.setItem("theme", themeId);
+  }, [themeId]);
+
+  const toggleLiveChat = () =>
+    setLiveChat((v) => {
+      localStorage.setItem("liveChat", v ? "off" : "on");
+      return !v;
+    });
+
+  /* Hộp mừng cưới: đánh dấu STK vừa sao chép để đổi nhãn nút trong 2s */
+  const [copied, setCopied] = useState<string | null>(null);
+  const copyAccount = (number: string) => {
+    navigator.clipboard?.writeText(number).then(() => {
+      setCopied(number);
+      setTimeout(() => setCopied(null), 2000);
+    });
+  };
+
+  /* Sổ lưu bút đã hiện đủ lời chúc → comment nổi tự nhường chỗ, khỏi trùng đôi */
+  const guestbookRef = useRef<HTMLElement>(null);
+  const [guestbookInView, setGuestbookInView] = useState(false);
+  const hasWishes = wishes.length > 0;
+  useEffect(() => {
+    const el = guestbookRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setGuestbookInView(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [hasWishes]);
+
+  /* Lightbox album: mở modal native, trượt tới đúng ảnh vừa chạm */
+  const [lightbox, setLightbox] = useState<number | null>(null);
+  const [lbIndex, setLbIndex] = useState(0);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const slidesRef = useRef<HTMLDivElement>(null);
+  const openLightbox = (i: number) => {
+    setLightbox(i);
+    setLbIndex(i);
+  };
+  const sheetRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const d = dialogRef.current;
+    if (lightbox === null || !d) return;
+    /* dọn dấu vết lần vuốt-đóng trước rồi mới mở */
+    const sheet = sheetRef.current;
+    if (sheet) {
+      sheet.style.transform = "";
+      sheet.style.opacity = "";
+      sheet.style.transition = "";
+    }
+    d.style.backgroundColor = "";
+    d.showModal();
+    const s = slidesRef.current;
+    if (s) s.scrollLeft = lightbox * s.clientWidth;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [lightbox]);
+
+  /* Vuốt xuống để đóng lightbox: ảnh theo ngón tay, nền nhạt dần, thả đủ xa thì đóng.
+     Chỉ nhận cử chỉ dọc rõ rệt để không giành với vuốt ngang chuyển ảnh */
+  const lbDrag = useRef({ x0: 0, y0: 0, dy: 0, mode: "idle" as "idle" | "drag" | "scroll" });
+  const onLbTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    lbDrag.current = { x0: t.clientX, y0: t.clientY, dy: 0, mode: "idle" };
+  };
+  const onLbTouchMove = (e: React.TouchEvent) => {
+    const d = lbDrag.current;
+    const t = e.touches[0];
+    const dx = t.clientX - d.x0;
+    const dy = t.clientY - d.y0;
+    if (d.mode === "idle") {
+      if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx) * 1.2) d.mode = "drag";
+      else if (Math.abs(dx) > 12) d.mode = "scroll";
+    }
+    if (d.mode !== "drag") return;
+    d.dy = Math.max(0, dy);
+    const sheet = sheetRef.current;
+    const dlg = dialogRef.current;
+    if (sheet) sheet.style.transform = `translateY(${d.dy}px)`;
+    if (dlg)
+      dlg.style.backgroundColor = `rgb(20 16 14 / ${0.95 * (1 - Math.min(1, d.dy / 500))})`;
+  };
+  const onLbTouchEnd = () => {
+    const d = lbDrag.current;
+    const sheet = sheetRef.current;
+    const dlg = dialogRef.current;
+    if (d.mode === "drag" && d.dy > 100) {
+      /* trượt nốt xuống rồi mới đóng cho liền mạch */
+      if (sheet) {
+        sheet.style.transition = "transform 180ms var(--ease), opacity 180ms var(--ease)";
+        sheet.style.transform = "translateY(70vh)";
+        sheet.style.opacity = "0";
+      }
+      if (dlg) dlg.style.backgroundColor = "rgb(20 16 14 / 0)";
+      setTimeout(() => dialogRef.current?.close(), 180);
+    } else {
+      if (sheet) {
+        sheet.style.transition = "transform 200ms var(--ease)";
+        sheet.style.transform = "";
+        setTimeout(() => {
+          if (sheet) sheet.style.transition = "";
+        }, 220);
+      }
+      if (dlg) dlg.style.backgroundColor = "";
+    }
+    d.mode = "idle";
+    d.dy = 0;
+  };
 
   /* Tải sổ lưu bút: chỉ lấy các dòng có lời chúc, mới nhất trước */
   useEffect(() => {
@@ -162,14 +397,36 @@ export default function Invite() {
     };
   }, [gateGone]);
 
+  /* Fade âm lượng bằng rAF cho nhạc vào/ra mềm.
+     ponytail: iOS Safari khóa audio.volume nên fade tự vô hiệu ở đó, play/pause vẫn chạy bình thường */
+  const fadeRaf = useRef(0);
+  const fadeTo = (target: number, ms: number, done?: () => void) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    cancelAnimationFrame(fadeRaf.current);
+    const from = audio.volume;
+    const t0 = performance.now();
+    const step = (t: number) => {
+      const k = Math.min(1, (t - t0) / ms);
+      audio.volume = from + (target - from) * k;
+      if (k < 1) fadeRaf.current = requestAnimationFrame(step);
+      else done?.();
+    };
+    fadeRaf.current = requestAnimationFrame(step);
+  };
+
   const openInvite = () => {
     /* Reload giữa trang: trình duyệt khôi phục vị trí scroll cũ, kéo về đầu trước khi mở */
     window.scrollTo(0, 0);
     setOpened(true);
     const audio = audioRef.current;
+    if (audio) audio.volume = 0;
     audio
       ?.play()
-      .then(() => setPlaying(true))
+      .then(() => {
+        setPlaying(true);
+        fadeTo(1, 2000);
+      })
       .catch(() => { });
     setTimeout(() => setGateGone(true), 1300);
   };
@@ -178,14 +435,18 @@ export default function Invite() {
     const audio = audioRef.current;
     if (!audio) return;
     if (audio.paused) {
-      audio.play().then(() => setPlaying(true)).catch(() => { });
+      audio.play().then(() => {
+        setPlaying(true);
+        fadeTo(1, 800);
+      }).catch(() => { });
     } else {
-      audio.pause();
+      /* đĩa dừng quay ngay cho phản hồi tức thì, nhạc lịm dần rồi mới pause hẳn */
       setPlaying(false);
+      fadeTo(0, 500, () => audio.pause());
     }
   };
 
-  const submitRsvp = async (e: React.FormEvent<HTMLFormElement>) => {
+  const submitRsvp = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSending(true);
     const f = new FormData(e.currentTarget);
@@ -211,7 +472,9 @@ export default function Invite() {
   };
 
   return (
-    <main className="overflow-hidden">
+    /* overflow-clip thay hidden: vẫn cắt phần tràn nhưng không thành scroll container,
+       để animation-timeline: view() của ảnh parallax bám đúng scroll của trang */
+    <main className="overflow-clip">
       <audio ref={audioRef} src="/wedding-music.m4a" loop preload="auto" />
 
       {/* ===== Màn hình chào: bóc thiệp ===== */}
@@ -258,45 +521,37 @@ export default function Invite() {
             className={`absolute inset-0 flex flex-col items-center justify-center px-8 pb-10 text-center transition-opacity duration-300 ${opened ? "opacity-0" : ""
               }`}
           >
-            <div
-              className={`mt-6 w-full border border-line bg-white/50 px-4 rounded-md py-6 transition-all duration-700 ease-(--ease) ${showCard ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0"
-                }`}
-            >
+            {/* intro chạy bằng CSS animation thuần, không phụ thuộc JS */}
+            <div className="intro-rise mt-6 w-full rounded-md border border-line bg-white/50 px-4 py-6">
               <p className="text-sm tracking-[0.25em] mb-3 text-muted uppercase">
                 Thiệp mời lễ cưới
               </p>
               <p className="mt-2 font-display text-3xl font-bold flex items-center flex-col justify-center gap-1 whitespace-nowrap">
                 {/* tên cô dâu chú rể hiện dần từ mờ nhòe sang rõ nét, so le nhau */}
-                <span
-                  className={`transition-all delay-300 duration-1400 ease-(--ease) ${showCard ? "scale-100 opacity-100 blur-none" : "scale-95 opacity-0 blur-sm"
-                    }`}
-                >
-                  {WEDDING.groom}
-                </span>
+                <span className="intro-blur [animation-delay:0.6s]">{WEDDING.groom}</span>
                 <Image
                   src="/heart.webp"
                   alt=""
                   width={56}
                   height={56}
-                  className={`transition-all delay-1200 duration-500 ease-(--ease) ${showCard ? "scale-100 opacity-100" : "scale-95 opacity-0"
-                    }`}
+                  className="intro-pop"
                 />
-                <span
-                  className={`transition-all delay-700 duration-1400 ease-(--ease) ${showCard ? "scale-100 opacity-100 blur-none" : "scale-95 opacity-0 blur-sm"
-                    }`}
-                >
-                  {WEDDING.bride}
-                </span>
+                <span className="intro-blur [animation-delay:1s]">{WEDDING.bride}</span>
               </p>
               <p className="mt-2 font-display text-2xl font-bold text-muted italic">
                 {WEDDING.dateDisplay}
               </p>
+              {/* Link mời riêng: đề tên khách như thiệp viết tay */}
+              {guest && (
+                <p className="mt-4 font-script text-2xl text-accent">
+                  Thân mời {guest}
+                </p>
+              )}
 
               {/* Trái tim đập: chạm để bóc thiệp */}
               <button
                 type="button"
                 onClick={openInvite}
-                disabled={!showCard}
                 aria-label="Bóc thiệp cưới"
                 className="group mt-5 inline-flex flex-col items-center"
               >
@@ -307,7 +562,7 @@ export default function Invite() {
                   {/* bóng tim lan tỏa sau mỗi nhịp đập */}
                   <HeartIcon className="heart-echo absolute inset-0 h-full w-full text-accent" />
                   <span className="heartbeat absolute inset-0 block">
-                    <HeartIcon className="h-full w-full text-accent filter-[drop-shadow(0_4px_12px_rgba(142,59,44,0.4))]" />
+                    <HeartIcon className="h-full w-full text-accent filter-[drop-shadow(0_4px_12px_var(--accent-glow))]" />
                     <span className="absolute inset-x-0 top-[30%] font-display text-xl text-paper italic">
                       {WEDDING.initials[0]}
                       <span className="mx-0.5 text-lg">&</span>
@@ -341,7 +596,7 @@ export default function Invite() {
               }`}
             style={{
               background:
-                "radial-gradient(circle, #8e3b2c 0 8px, #faf7f2 8px 9px, #2c2724 9px 11px, #3a332e 11px 13px, #2c2724 13px 15px, #3a332e 15px 17px, #2c2724 17px)",
+                "radial-gradient(circle, var(--accent) 0 8px, var(--paper) 8px 9px, #2c2724 9px 11px, #3a332e 11px 13px, #2c2724 13px 15px, #3a332e 15px 17px, #2c2724 17px)",
             }}
           />
           {!playing && (
@@ -350,17 +605,107 @@ export default function Invite() {
         </button>
       )}
 
+      {/* ===== Chọn tông màu thiệp: cột dọc ngay trên nút nhạc (bottom-4 + h-12 → bottom-18) ===== */}
+      {gateGone && (
+        <fieldset className="fixed right-4 bottom-18 z-40 rounded-full border border-paper/50 bg-paper/25 px-1 py-1.5 shadow-[0_2px_12px_rgba(44,39,36,0.12)] backdrop-blur-md min-[430px]:right-[calc(50%-199px)]">
+          <legend className="sr-only">Chọn tông màu thiệp</legend>
+          <div className="flex flex-col items-center gap-1">
+            {THEMES.map((t) => (
+              <label
+                key={t.id}
+                title={t.label}
+                /* data-theme trên chính swatch: kéo đúng --accent của tông đó từ CSS, khỏi lặp mã màu */
+                data-theme={t.id}
+                className="cursor-pointer rounded-full p-1.5 has-focus-visible:ring-2 has-focus-visible:ring-accent/40"
+              >
+                <input
+                  type="radio"
+                  name="theme"
+                  value={t.id}
+                  checked={themeId === t.id}
+                  onChange={() => pickTheme(t.id)}
+                  className="sr-only"
+                />
+                <span
+                  className={`block h-4 w-4 rounded-full bg-accent transition-transform duration-200 ease-(--ease) ${themeId === t.id
+                    ? "scale-115 ring-2 ring-paper"
+                    : "hover:scale-110"
+                    }`}
+                />
+                <span className="sr-only">{t.label}</span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+      )}
+
+      {/* ===== Comment nổi kiểu livestream: trôi lên, mờ dần ở mép trên,
+             pointer-events-none nên không cản chạm/cuộn ===== */}
+      {gateGone && wishes.length >= 3 && (
+        <div
+          aria-hidden="true"
+          className={`live-chat-overlay pointer-events-none fixed bottom-20 left-3 z-30 h-72 w-[72%] max-w-80 overflow-hidden mask-[linear-gradient(to_bottom,transparent,black_35%)] transition-opacity duration-300 min-[430px]:left-[calc(50%-203px)] ${liveChat && !guestbookInView ? "opacity-100" : "opacity-0"
+            }`}
+        >
+          <div
+            className="chat-scroll"
+            style={{ ["--dur" as string]: `${wishes.length * 5}s` }}
+          >
+            {[0, 1].map((copy) => (
+              <div key={copy} className="flex flex-col items-start gap-2 pb-2">
+                {wishes.map((w) => (
+                  <p
+                    key={`${copy}-${w.id}`}
+                    className="max-w-full rounded-2xl bg-accent/75 px-3.5 py-1.5 text-sm leading-relaxed text-paper backdrop-blur-sm"
+                  >
+                    <span className="font-semibold">{w.name}</span>: {w.vibe} {w.wish}
+                  </p>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Nút bật/tắt comment nổi */}
+      {gateGone && wishes.length >= 3 && (
+        <button
+          type="button"
+          onClick={toggleLiveChat}
+          aria-pressed={liveChat}
+          aria-label={liveChat ? "Ẩn lời chúc nổi" : "Hiện lời chúc nổi"}
+          /* ở sổ lưu bút overlay bị ép ẩn, nút bấm không có tác dụng nhìn thấy → ẩn nút theo luôn */
+          className={`fixed bottom-4 left-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-paper/50 bg-paper/25 text-ink shadow-[0_2px_12px_rgba(44,39,36,0.12)] backdrop-blur-md transition-opacity duration-300 min-[430px]:left-[calc(50%-199px)] ${guestbookInView ? "pointer-events-none opacity-0" : "opacity-100"
+            }`}
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+            className="h-5 w-5"
+          >
+            <path d="M21 11.5a8.38 8.38 0 0 1-8.4 8.4c-1.2 0-2.35-.25-3.4-.7L3 21l1.8-5.2a8.4 8.4 0 1 1 16.2-4.3z" />
+            {!liveChat && <line x1="4" y1="20" x2="20" y2="4" />}
+          </svg>
+        </button>
+      )}
+
       {/* ===== Trang bìa ===== */}
       <section className="relative flex h-dvh items-end overflow-hidden">
         <Image
-          src="/assets/cover.jpg"
+          key={theme.cover}
+          src={theme.cover}
           alt={`${COUPLE} trong trang phục cưới`}
           fill
           priority
           sizes="430px"
           className={`object-cover object-top ${opened ? "kenburns" : ""}`}
         />
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-[#1c1512]/75 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-linear-to-t from-(--shade)/75 to-transparent" />
         {/* dải sương mờ: ảnh blur dần về mép dưới rồi tan vào màu giấy của section kế tiếp
             (nằm trước khối chữ trong DOM nên chữ vẫn sắc nét) */}
         <div className="absolute inset-x-0 bottom-0 h-40 backdrop-blur-[6px] mask-[linear-gradient(to_top,black_25%,transparent)]" />
@@ -390,15 +735,186 @@ export default function Invite() {
       </section>
 
       {/* ===== Lời ngỏ ===== */}
-      <section className="px-8 py-16 text-center">
+      <section className="px-8 py-12 text-center">
         <Reveal>
-          <p className="font-display text-[1.75rem] leading-snug italic">
+          {/* Shelia chỉ có weight Regular: không đặt font-medium kẻo browser bôi đậm giả, hỏng nét thư pháp */}
+          <p className="font-script text-2xl leading-normal text-accent">
             &ldquo;Yêu nhau mấy núi cũng trèo, ngày vui của chúng mình chỉ thiếu mỗi bạn.&rdquo;
           </p>
-          <p className="mt-6 text-[17px] leading-relaxed text-muted">
+          {/* <p className="mt-6 text-[17px] leading-relaxed text-muted">
             Chúng mình cưới! Sự hiện diện của bạn là niềm vinh hạnh lớn nhất
             đối với gia đình hai bên.
+          </p> */}
+        </Reveal>
+      </section>
+
+      {/* ===== Thông tin cô dâu chú rể: hai họ đối xứng ===== */}
+      <div className="mb-6 mt-2 flex items-center gap-3">
+        <span className="h-px flex-1 bg-linear-to-l from-accent/40 to-transparent" />
+        <p className="text-xs tracking-[0.3em] text-accent uppercase">LỜI CHÀO</p>
+        <span className="h-px flex-1 bg-linear-to-r from-accent/40 to-transparent" />
+      </div>
+      <section className="px-6 pb-16">
+        <div className="grid grid-cols-2 gap-x-4">
+          <Reveal className="text-center">
+            <p className="text-xs font-medium tracking-[0.3em] text-accent uppercase">
+              Nhà trai
+            </p>
+            {/* min-h giữ hai cột thẳng hàng khi số dòng tên bố mẹ lệch nhau */}
+            <div className="mt-2 min-h-10 space-y-0.5">
+              {WEDDING.groomFamily.map((name) => (
+                <p key={name} className="text-sm leading-5">{name}</p>
+              ))}
+            </div>
+            <p className="mt-4 text-xs tracking-[0.25em] text-muted uppercase">Chú rể</p>
+            <p className="mt-1.5 font-script text-3xl whitespace-nowrap">{WEDDING.groom}</p>
+            <figure className="relative mt-5 aspect-3/4 overflow-hidden rounded-xl">
+              <Image
+                src="/assets/gallery/IMG_5364.jpg"
+                alt={`Chú rể ${WEDDING.groom}`}
+                fill
+                sizes="360px"
+                /* ảnh gốc full-body: zoom bán thân cho cân với ảnh cô dâu */
+                className="origin-top scale-160 object-cover object-top"
+              />
+            </figure>
+          </Reveal>
+
+          <Reveal className="text-center" delay={120}>
+            <p className="text-xs font-medium tracking-[0.3em] text-accent uppercase">
+              Nhà gái
+            </p>
+            <div className="mt-2 min-h-10 space-y-0.5">
+              {WEDDING.brideFamily.map((name) => (
+                <p key={name} className="text-sm leading-5">{name}</p>
+              ))}
+            </div>
+            <p className="mt-4 text-xs tracking-[0.25em] text-muted uppercase">Cô dâu</p>
+            <p className="mt-1.5 font-script text-3xl whitespace-nowrap">{WEDDING.bride}</p>
+            <figure className="relative mt-5 aspect-3/4 overflow-hidden rounded-xl">
+              <Image
+                src="/assets/gallery/IMG_4961.jpg"
+                alt={`Cô dâu ${WEDDING.bride}`}
+                fill
+                sizes="180px"
+                className="object-cover object-top"
+              />
+            </figure>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ===== Thiệp mời: 3 ảnh + giờ lễ + lịch + đếm ngược ===== */}
+      <section className="px-6 pb-16">
+        <Reveal>
+          <Heading>Trân trọng kính mời</Heading>
+        </Reveal>
+
+        {/* 3 ảnh so le: chú rể — cặp đôi — cô dâu, hai bên hạ thấp cho nhịp điệu */}
+        <Reveal>
+          <div className="grid grid-cols-3 items-start gap-2">
+            <figure className="relative mt-8 aspect-3/4 overflow-hidden rounded-xl">
+              <Image
+                src="/assets/gallery/IMG_4998.jpg"
+                alt={`${COUPLE} sánh bước bên nhau`}
+                fill
+                sizes="140px"
+                className="object-cover object-top"
+              />
+            </figure>
+            <figure className="relative aspect-3/4 overflow-hidden rounded-xl">
+              <Image
+                src="/assets/gallery/IMG_5274.jpg"
+                alt={`${COUPLE} ngoắc tay hẹn ước`}
+                fill
+                sizes="140px"
+                className="object-cover object-top"
+              />
+            </figure>
+            <figure className="relative mt-8 aspect-3/4 overflow-hidden rounded-xl">
+              <Image
+                src="/assets/gallery/IMG_5304.jpg"
+                alt={`${COUPLE} trao nhau ánh nhìn`}
+                fill
+                sizes="140px"
+                className="object-cover object-top"
+              />
+            </figure>
+          </div>
+        </Reveal>
+
+        {/* Lời mời + giờ lễ chia 3 cột kiểu thiệp in */}
+        <Reveal className="mt-12 text-center">
+          <p className="text-sm tracking-[0.3em] text-muted uppercase">
+            Tham gia tiệc mừng
           </p>
+          <p className="mt-3 font-script text-5xl text-accent">Vu Quy</p>
+
+          <div className="mx-auto mt-8 grid max-w-90 grid-cols-[1fr_auto_1fr] items-center">
+            <p className="font-display font-semibold text-3xl text-accent">{WEDDING.ceremony.hour}</p>
+            <div className="border-x border-accent/30 px-5 py-1.5">
+              <p className="text-xs tracking-[0.25em] whitespace-nowrap text-muted uppercase">
+                {CAL_WEEKDAY}
+              </p>
+              <p className="mt-1 font-display text-2xl whitespace-nowrap">{CAL_DM}</p>
+            </div>
+            <p className="font-display text-3xl font-semibold text-accent">{wd.getFullYear()}</p>
+          </div>
+        </Reveal>
+
+        {/* Lịch tháng cưới */}
+        <Reveal className="mt-12">
+
+          <div className="mt-5 grid grid-cols-7 gap-y-2 text-center text-sm">
+            {["T2", "T3", "T4", "T5", "T6", "T7", "CN"].map((d) => (
+              <span key={d} className={d === "CN" ? "font-medium text-accent" : "text-muted"}>
+                {d}
+              </span>
+            ))}
+            {Array.from({ length: CAL_PAD }).map((_, i) => (
+              <span key={`pad-${i}`} />
+            ))}
+            {Array.from({ length: CAL_DAYS }, (_, i) => i + 1).map((day) =>
+              day === CAL_DAY ? (
+                /* Ngày cưới: trái tim tự vẽ nét → tô màu → đập nhịp, chạy khi lịch cuộn vào tầm nhìn */
+                <span key={day} className="flex justify-center">
+                  <span className="relative -my-1 h-12 w-12">
+                    <HeartIcon className="cal-heart-echo absolute inset-0 h-full w-full text-accent" />
+                    <span className="cal-heart-beat absolute inset-0 block">
+                      <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                        className="h-full w-full text-accent filter-[drop-shadow(0_3px_8px_var(--accent-glow))]"
+                      >
+                        <path
+                          pathLength={1}
+                          className="cal-heart-path"
+                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                        />
+                      </svg>
+                      <span className="cal-heart-day absolute inset-0 flex items-center justify-center pb-1.5 text-sm font-bold text-paper">
+                        {day}
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              ) : (
+                <span key={day} className="inline-flex h-8 text-accent/80  text-sm items-center justify-center">
+                  {day}
+                </span>
+              )
+            )}
+          </div>
+        </Reveal>
+
+        {/* Đếm ngược */}
+        <Reveal className="mt-2">
+          <div className="mb-4 flex items-center gap-3">
+            <span className="h-px flex-1 bg-linear-to-l from-accent/40 to-transparent" />
+            <p className="text-xs tracking-[0.3em] text-accent uppercase">Đếm ngược</p>
+            <span className="h-px flex-1 bg-linear-to-r from-accent/40 to-transparent" />
+          </div>
+          <Countdown />
         </Reveal>
       </section>
 
@@ -410,13 +926,13 @@ export default function Invite() {
 
         <div className="space-y-14">
           <Reveal>
-            <figure className="relative aspect-4/5 overflow-hidden rounded-xl">
+            <figure className="relative aspect-4/5 overflow-clip rounded-xl">
               <Image
                 src="/assets/story-1.jpg"
                 alt="Hai đứa trong bộ cổ phục ngày dạm ngõ"
                 fill
                 sizes="430px"
-                className="object-cover"
+                className="parallax object-cover"
               />
             </figure>
             <h3 className="mt-5 font-display text-[1.75rem]">Ngày mình gặp nhau</h3>
@@ -427,13 +943,13 @@ export default function Invite() {
           </Reveal>
 
           <Reveal className="ml-10">
-            <figure className="relative aspect-4/5 overflow-hidden rounded-xl">
+            <figure className="relative aspect-4/5 overflow-clip rounded-xl">
               <Image
                 src="/assets/story-2.jpg"
                 alt="Hai đứa cười tươi trong bộ đồ cưới màu kem"
                 fill
                 sizes="390px"
-                className="object-cover"
+                className="parallax object-cover"
               />
             </figure>
             <h3 className="mt-5 font-display text-[1.75rem]">Những năm tháng bên nhau</h3>
@@ -443,13 +959,13 @@ export default function Invite() {
           </Reveal>
 
           <Reveal className="mr-10">
-            <figure className="relative aspect-4/5 overflow-hidden rounded-xl">
+            <figure className="relative aspect-4/5 overflow-clip rounded-xl">
               <Image
                 src="/assets/story-3.jpg"
-                alt="Khoảnh khắc mở champagne ăn mừng"
+                alt="Hai đứa tung pháo giấy mừng ngày chung đôi"
                 fill
                 sizes="390px"
-                className="object-cover"
+                className="parallax object-cover"
               />
             </figure>
             <h3 className="mt-5 font-display text-[1.75rem]">Về chung một nhà</h3>
@@ -461,18 +977,39 @@ export default function Invite() {
       </section>
 
       {/* ===== Chi tiết hôn lễ ===== */}
-      <section className="bg-[#f3ece2] px-8 py-16">
+      <section className="bg-alt px-8 py-16">
         <Reveal>
           <Heading>Hôn lễ</Heading>
         </Reveal>
 
+        {/* Khung thiệp cổ điển: viền kép, giờ + ngày là tâm điểm */}
         <Reveal>
-          <div className="text-center">
-            <h3 className="font-display text-[1.75rem]">{WEDDING.ceremony.title}</h3>
-            <p className="mt-1 text-sm text-muted">{WEDDING.ceremony.side}</p>
-            <p className="mt-4 text-base leading-relaxed">{WEDDING.ceremony.hosts}</p>
-            <p className="mt-1 text-base">{WEDDING.ceremony.time}</p>
-            <p className="mt-1 text-base text-muted">{WEDDING.ceremony.address}</p>
+          <div className="rounded-2xl border border-accent/35 bg-field p-1.5 shadow-[0_2px_10px_rgba(44,39,36,0.07)]">
+            <div className="rounded-[10px] border border-accent/20 px-6 py-8 text-center">
+              <p className="text-xs font-medium tracking-[0.3em] text-muted uppercase">
+                Thông tin hôn lễ
+              </p>
+              <h3 className="mt-3 font-display text-4xl">{WEDDING.ceremony.title}</h3>
+              <p className="mt-2 text-base text-muted">
+                {WEDDING.ceremony.side}:{" "}
+                <span className="font-medium text-ink">{WEDDING.ceremony.hosts}</span>
+              </p>
+
+              <div className="mt-7 flex items-center gap-3">
+                <span className="h-px flex-1 bg-linear-to-l from-accent/40 to-transparent" />
+                <p className="text-xs tracking-[0.3em] text-accent uppercase">Vào lúc</p>
+                <span className="h-px flex-1 bg-linear-to-r from-accent/40 to-transparent" />
+              </div>
+              <p className="mt-4 font-display text-[3.25rem] leading-none text-accent">
+                {WEDDING.ceremony.hour}
+              </p>
+              <p className="mt-3 font-display text-xl italic">{WEDDING.dateFull}</p>
+
+              <p className="mt-6 text-base font-medium">{WEDDING.ceremony.venue}</p>
+              <p className="mt-1 text-base leading-relaxed text-muted">
+                {WEDDING.ceremony.address}
+              </p>
+            </div>
           </div>
         </Reveal>
 
@@ -496,7 +1033,8 @@ export default function Invite() {
           <iframe
             src={WEDDING.mapsEmbed}
             title="Bản đồ đến địa điểm hôn lễ"
-            className="h-80 w-full rounded-xl border-0"
+            /* nền + viền giữ chỗ khi bản đồ chưa tải, tránh lỗ trắng giữa section */
+            className="h-80 w-full rounded-xl border border-line bg-field"
             allowFullScreen
             loading="lazy"
             referrerPolicy="strict-origin-when-cross-origin"
@@ -514,50 +1052,6 @@ export default function Invite() {
           </a>
         </Reveal>
 
-        {/* Lịch tháng 08.2026 */}
-        <Reveal className="mt-12">
-          <p className="text-center font-display text-2xl">{CAL_LABEL}</p>
-          <div className="mt-5 grid grid-cols-7 gap-y-2 text-center text-base">
-            {["T2", "T3", "T4", "T5", "T6", "T7", "CN"].map((d) => (
-              <span key={d} className={d === "CN" ? "font-medium text-accent" : "text-muted"}>
-                {d}
-              </span>
-            ))}
-            {Array.from({ length: CAL_PAD }).map((_, i) => (
-              <span key={`pad-${i}`} />
-            ))}
-            {Array.from({ length: CAL_DAYS }, (_, i) => i + 1).map((day) =>
-              day === CAL_DAY ? (
-                /* Ngày cưới: trái tim tự vẽ nét → tô màu → đập nhịp, chạy khi lịch cuộn vào tầm nhìn */
-                <span key={day} className="flex justify-center">
-                  <span className="relative -my-1 h-12 w-12">
-                    <HeartIcon className="cal-heart-echo absolute inset-0 h-full w-full text-accent" />
-                    <span className="cal-heart-beat absolute inset-0 block">
-                      <svg
-                        viewBox="0 0 24 24"
-                        aria-hidden="true"
-                        className="h-full w-full text-accent filter-[drop-shadow(0_3px_8px_rgba(142,59,44,0.35))]"
-                      >
-                        <path
-                          pathLength={1}
-                          className="cal-heart-path"
-                          d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                        />
-                      </svg>
-                      <span className="cal-heart-day absolute inset-0 flex items-center justify-center pb-1.5 text-sm font-medium text-paper">
-                        {day}
-                      </span>
-                    </span>
-                  </span>
-                </span>
-              ) : (
-                <span key={day} className="inline-flex h-10 items-center justify-center">
-                  {day}
-                </span>
-              )
-            )}
-          </div>
-        </Reveal>
       </section>
 
       {/* ===== Album ảnh ===== */}
@@ -566,31 +1060,70 @@ export default function Invite() {
           <Heading>Khoảnh khắc</Heading>
         </Reveal>
 
-        {/* Masonry 2 cột: chia ảnh chẵn/lẻ vào 2 cột cố định để lúc mở rộng,
-            ảnh cũ đứng yên, ảnh mới chỉ nối thêm vào đuôi mỗi cột.
-            Mỗi ảnh tự quan sát viewport và quét vào như lát gạch từ trên xuống —
-            dùng chung cho cả scroll lẫn lúc bấm xem thêm */}
-        <div className="grid grid-cols-2 items-start gap-3">
-          {[0, 1].map((c) => (
-            <div key={c} className={`grid gap-3 ${c === 1 ? "mt-8" : ""}`}>
-              {(galleryOpen ? GALLERY : GALLERY.slice(0, GALLERY_PREVIEW))
-                .filter((_, i) => i % 2 === c)
-                .map((img, i) => (
-                  <Reveal key={img.src} effect="tile" delay={(i % 3) * 120 + c * 60}>
-                    <figure className="overflow-hidden rounded-xl">
+        {/* Nhịp magazine: cụm masonry 2 cột xen ảnh ngang tràn viền.
+            Hai cột trôi lệch tốc độ khi cuộn (drift-a/b), ảnh ngang parallax như ảnh story.
+            Mỗi ảnh vẫn tự quét vào như lát gạch, dùng chung cho scroll lẫn lúc bấm xem thêm */}
+        <div className="space-y-3">
+          {GALLERY_ROWS.map((row, ri) => {
+            const limit = galleryOpen ? GALLERY.length : GALLERY_PREVIEW;
+            if (row.type === "wide") {
+              if (row.gi >= limit) return null;
+              return (
+                <Reveal key={row.img.src} effect="tile">
+                  <button
+                    type="button"
+                    onClick={() => openLightbox(row.gi)}
+                    aria-label={`Phóng to ${row.img.alt}`}
+                    className="block w-full cursor-zoom-in"
+                  >
+                    <figure className="relative aspect-3/2 overflow-clip rounded-xl">
                       <Image
-                        src={img.src}
-                        alt={img.alt}
-                        width={img.w}
-                        height={img.h}
-                        sizes="215px"
-                        className="h-auto w-full"
+                        src={row.img.src}
+                        alt={row.img.alt}
+                        fill
+                        sizes="430px"
+                        className="parallax object-cover"
                       />
                     </figure>
-                  </Reveal>
+                  </button>
+                </Reveal>
+              );
+            }
+            const items = row.items.filter(({ gi }) => gi < limit);
+            if (!items.length) return null;
+            return (
+              <div key={`chunk-${ri}`} className="grid grid-cols-2 items-start gap-3">
+                {[0, 1].map((c) => (
+                  <div
+                    key={c}
+                    className={`grid gap-3 ${c === 1 ? "mt-8 drift-b" : "drift-a"}`}
+                  >
+                    {items
+                      .filter((_, i) => i % 2 === c)
+                      .map(({ img, gi }, i) => (
+                        <Reveal key={img.src} effect="tile" delay={(i % 3) * 120 + c * 60}>
+                          <button
+                            type="button"
+                            onClick={() => openLightbox(gi)}
+                            aria-label={`Phóng to ${img.alt}`}
+                            className="block w-full cursor-zoom-in overflow-clip rounded-xl"
+                          >
+                            <Image
+                              src={img.src}
+                              alt={img.alt}
+                              width={img.w}
+                              height={img.h}
+                              sizes="215px"
+                              className="h-auto w-full"
+                            />
+                          </button>
+                        </Reveal>
+                      ))}
+                  </div>
                 ))}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
 
         {!galleryOpen && (
@@ -600,24 +1133,41 @@ export default function Invite() {
               onClick={() => setGalleryOpen(true)}
               className="inline-flex min-h-12 items-center justify-center rounded-full border border-accent px-8 text-base font-medium text-accent transition-colors duration-200 hover:bg-accent hover:text-paper"
             >
-              + {GALLERY.length - GALLERY_PREVIEW} ảnh nữa
+              + Xem thêm
             </button>
           </Reveal>
         )}
       </section>
 
       {/* ===== RSVP ===== */}
-      <section className="bg-[#f3ece2] px-8 py-16">
+      <section className="bg-alt px-8 py-16">
         <Reveal>
           <Heading>Xác nhận tham dự</Heading>
         </Reveal>
 
         {sent ? (
-          <p className="text-center text-base leading-relaxed">
-            Cảm ơn bạn đã xác nhận! 🥰
-            <br />
-            Lời chúc của bạn đã nằm gọn trong sổ lưu bút phía dưới 👇
-          </p>
+          <div className="relative text-center">
+            {/* pháo tim bung lên một lần mừng lời chúc vừa gửi */}
+            <div className="pointer-events-none absolute inset-x-0 -top-6 h-36" aria-hidden="true">
+              {BURST.map(([left, delay, dur, size], i) => (
+                <span
+                  key={i}
+                  className="burst-heart"
+                  style={{
+                    left: `${left}%`,
+                    animationDelay: `${delay}s`,
+                    animationDuration: `${dur}s`,
+                    ["--s" as string]: size,
+                  }}
+                />
+              ))}
+            </div>
+            <p className="text-base leading-relaxed">
+              Cảm ơn bạn đã xác nhận! 🥰
+              <br />
+              Lời chúc của bạn đã nằm gọn trong sổ lưu bút phía dưới 👇
+            </p>
+          </div>
         ) : (
           <Reveal>
             <form onSubmit={submitRsvp} className="space-y-5">
@@ -631,8 +1181,11 @@ export default function Invite() {
                   type="text"
                   required
                   autoComplete="name"
+                  /* key: input uncontrolled, remount để nhận tên từ link mời riêng */
+                  key={guest || "no-guest"}
+                  defaultValue={guest}
                   placeholder="Nhập tên đáng yêu của bạn..."
-                  className="w-full rounded-lg border border-line bg-[#fffdf9] px-4 py-3 text-base outline-none placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+                  className="w-full rounded-lg border border-line bg-field px-4 py-3 text-base outline-none placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
                 />
               </div>
 
@@ -644,7 +1197,7 @@ export default function Invite() {
                   {["Nhà trai", "Nhà gái"].map((side) => (
                     <label
                       key={side}
-                      className="flex min-h-12 cursor-pointer items-center justify-center rounded-lg border border-line bg-[#fffdf9] text-base has-checked:border-accent has-checked:bg-accent has-checked:text-paper has-focus-visible:ring-2 has-focus-visible:ring-accent/40"
+                      className="flex min-h-12 cursor-pointer items-center justify-center rounded-lg border border-line bg-field text-base has-checked:border-accent has-checked:bg-accent has-checked:text-paper has-focus-visible:ring-2 has-focus-visible:ring-accent/40"
                     >
                       <input
                         type="radio"
@@ -672,7 +1225,7 @@ export default function Invite() {
                   max={10}
                   defaultValue={1}
                   required
-                  className="w-full rounded-lg border border-line bg-[#fffdf9] px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
+                  className="w-full rounded-lg border border-line bg-field px-4 py-3 text-base outline-none focus:border-accent focus:ring-2 focus:ring-accent/30"
                 />
               </div>
 
@@ -684,7 +1237,7 @@ export default function Invite() {
                   {VIBES.map(([emoji, label], i) => (
                     <label
                       key={label}
-                      className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border border-line bg-[#fffdf9] py-3 text-2xl transition-all duration-200 has-checked:-translate-y-0.5 has-checked:border-accent has-checked:bg-accent/10 has-checked:shadow-[0_4px_12px_rgba(142,59,44,0.15)] has-focus-visible:ring-2 has-focus-visible:ring-accent/40"
+                      className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border border-line bg-field py-3 text-2xl transition-all duration-200 has-checked:-translate-y-0.5 has-checked:border-accent has-checked:bg-accent/10 has-checked:shadow-[0_4px_12px_var(--accent-glow-soft)] has-focus-visible:ring-2 has-focus-visible:ring-accent/40"
                     >
                       <input
                         type="radio"
@@ -713,7 +1266,7 @@ export default function Invite() {
                     value={wish}
                     onChange={(e) => setWish(e.target.value)}
                     placeholder="Viết những điều tốt lành nhất vào đây nha..."
-                    className="w-full resize-none rounded-lg border border-line bg-[#fffdf9] px-4 py-3 pb-7 text-base outline-none placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
+                    className="w-full resize-none rounded-lg border border-line bg-field px-4 py-3 pb-7 text-base outline-none placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
                   />
                   <span className="pointer-events-none absolute right-3 bottom-3 text-xs text-muted">
                     {wish.length}/300
@@ -727,7 +1280,7 @@ export default function Invite() {
                       type="button"
                       aria-label={`Thêm ${em} vào lời chúc`}
                       onClick={() => setWish((w) => (w + em).slice(0, 300))}
-                      className="flex h-11 flex-1 items-center justify-center rounded-full border border-line bg-[#fffdf9] text-lg transition-colors duration-200 hover:border-accent hover:bg-accent/10"
+                      className="flex h-11 flex-1 items-center justify-center rounded-full border border-line bg-field text-lg transition-colors duration-200 hover:border-accent hover:bg-accent/10"
                     >
                       {em}
                     </button>
@@ -756,9 +1309,52 @@ export default function Invite() {
         )}
       </section>
 
+      {/* ===== Hộp mừng cưới: đang ẩn, bật enabled trong lib/wedding.ts là hiện ===== */}
+      {WEDDING.gift.enabled && (
+        <section className="px-6 py-16">
+          <Reveal>
+            <Heading>Hộp mừng cưới</Heading>
+            <p className="-mt-4 mb-8 text-center text-base text-muted">
+              Chút tấm lòng gửi qua đây, chúng mình cảm ơn bạn nhiều lắm 💝
+            </p>
+          </Reveal>
+
+          <div className="grid grid-cols-2 gap-3">
+            {WEDDING.gift.accounts.map((acc, i) => (
+              <Reveal key={acc.side} delay={i * 120}>
+                <div className="flex h-full flex-col items-center rounded-xl border border-line bg-field px-4 py-5 text-center">
+                  <p className="text-xs tracking-[0.25em] text-accent uppercase">{acc.side}</p>
+                  {acc.qr && (
+                    <figure className="relative mt-4 aspect-square w-full max-w-32 overflow-hidden rounded-lg">
+                      <Image
+                        src={acc.qr}
+                        alt={`Mã QR chuyển khoản mừng cưới ${acc.side.toLowerCase()}`}
+                        fill
+                        sizes="128px"
+                        className="object-contain"
+                      />
+                    </figure>
+                  )}
+                  <p className="mt-3 text-sm text-muted">{acc.bank}</p>
+                  <p className="mt-1 font-display text-xl tracking-wide">{acc.number}</p>
+                  <p className="mt-1 text-sm">{acc.holder}</p>
+                  <button
+                    type="button"
+                    onClick={() => copyAccount(acc.number)}
+                    className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full border border-accent px-5 text-sm font-medium text-accent transition-colors duration-200 hover:bg-accent hover:text-paper"
+                  >
+                    {copied === acc.number ? "Đã chép ✓" : "Sao chép STK"}
+                  </button>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* ===== Sổ lưu bút: lời chúc từ mọi người ===== */}
       {wishes.length > 0 && (
-        <section className="overflow-hidden px-6 py-16">
+        <section ref={guestbookRef} className="overflow-hidden px-6 py-16">
           <Reveal>
             <Heading>Sổ lưu bút</Heading>
             <p className="-mt-4 mb-8 text-center text-base text-muted">
@@ -770,7 +1366,7 @@ export default function Invite() {
             {wishes.map((w, i) => (
               <Reveal key={w.id} delay={(i % 3) * 100}>
                 <figure
-                  className={`relative rounded-xl border border-line bg-[#fffdf9] px-5 pt-5 pb-4 shadow-[0_2px_10px_rgba(44,39,36,0.07)] ${i % 2 ? "-rotate-1" : "rotate-1"
+                  className={`relative rounded-xl border border-line bg-field px-5 pt-5 pb-4 shadow-[0_2px_10px_rgba(44,39,36,0.07)] ${i % 2 ? "-rotate-1" : "rotate-1"
                     }`}
                 >
                   {/* vibe dán như sticker trên mép thiệp */}
@@ -795,13 +1391,14 @@ export default function Invite() {
       {/* ===== Footer: ảnh nền full-bleed ===== */}
       <footer className="relative flex min-h-[70dvh] items-end overflow-hidden">
         <Image
-          src="/assets/footer.jpg"
-          alt={`${COUPLE} chạm trán sau chiếc quạt, nền đỏ trầm`}
+          key={theme.footer}
+          src={theme.footer}
+          alt={`${COUPLE} trong bộ ảnh cưới khép lại thiệp mời`}
           fill
           sizes="430px"
           className="object-cover"
         />
-        <div className="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-[#1c0f0b]/85 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-3/4 bg-linear-to-t from-(--shade)/85 to-transparent" />
         <div className="relative w-full px-8 pb-14 text-center text-paper">
           <Reveal>
             <p className="font-display text-4xl">
@@ -816,6 +1413,76 @@ export default function Invite() {
           </Reveal>
         </div>
       </footer>
+
+      {/* ===== Lightbox album: dialog native, vuốt ngang chuyển ảnh, Esc/chạm nền để đóng ===== */}
+      <dialog
+        ref={dialogRef}
+        onClose={() => setLightbox(null)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) e.currentTarget.close();
+        }}
+        /* dialog phủ full khung nên nền tối đặt trên chính nó, backdrop chỉ che phần ngoài khung 430px */
+        className="lightbox m-auto h-dvh max-h-none w-full max-w-107.5 bg-[#14100e]/95 p-0 backdrop:bg-[#14100e]/95"
+      >
+        {lightbox !== null && (
+          <div
+            ref={sheetRef}
+            onTouchStart={onLbTouchStart}
+            onTouchMove={onLbTouchMove}
+            onTouchEnd={onLbTouchEnd}
+            onTouchCancel={onLbTouchEnd}
+            className="relative h-full"
+          >
+            <div
+              ref={slidesRef}
+              onScroll={(e) =>
+                setLbIndex(
+                  Math.round(e.currentTarget.scrollLeft / e.currentTarget.clientWidth)
+                )
+              }
+              /* touch-pan-x: trình duyệt lo vuốt ngang, vuốt dọc nhường cho cử chỉ kéo-đóng */
+              className="flex h-full touch-pan-x snap-x snap-mandatory overflow-x-auto overscroll-contain"
+            >
+              {GALLERY.map((img) => (
+                <div
+                  key={img.src}
+                  className="flex h-full w-full flex-none snap-center items-center justify-center px-2"
+                >
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    width={img.w}
+                    height={img.h}
+                    sizes="430px"
+                    className="max-h-[85dvh] w-auto max-w-full rounded-lg object-contain"
+                  />
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => dialogRef.current?.close()}
+              aria-label="Đóng ảnh"
+              className="absolute top-4 right-4 flex h-11 w-11 items-center justify-center rounded-full bg-[#14100e]/60 text-paper backdrop-blur-sm"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+                className="h-5 w-5"
+              >
+                <path d="M6 6l12 12M18 6L6 18" />
+              </svg>
+            </button>
+            <p className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-[#14100e]/60 px-3 py-1 text-xs text-paper backdrop-blur-sm">
+              {lbIndex + 1} / {GALLERY.length}
+            </p>
+          </div>
+        )}
+      </dialog>
     </main>
   );
 }
