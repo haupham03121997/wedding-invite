@@ -27,16 +27,15 @@ const shelia = localFont({
 const title = `${COUPLE} | ${WEDDING.dateShort}`;
 const description = `Trân trọng kính mời bạn đến chung vui cùng gia đình chúng tôi trong ngày cưới của ${COUPLE}, ${WEDDING.dateFull}.`;
 
-// Khai báo URL Production chính thức của bạn để Messenger dễ nhận diện
-const PRODUCTION_URL = WEDDING.productionUrl;
+/* URL production tuyệt đối cho og:image/og:url (Messenger/Zalo cần absolute).
+   Ưu tiên domain Vercel tự cấp lúc build — đổi tên project sẽ tự đúng theo,
+   khỏi lặp lại sự cố og.jpg trỏ về domain cũ đã chết */
+const PRODUCTION_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : WEDDING.productionUrl;
 
 export const metadata: Metadata = {
-  /* Vercel tự cấp VERCEL_PROJECT_PRODUCTION_URL lúc build; local dùng localhost */
-  metadataBase: new URL(
-    process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : "http://localhost:3000"
-  ),
+  metadataBase: new URL(PRODUCTION_URL),
   title,
   description,
   openGraph: {

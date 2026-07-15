@@ -44,8 +44,9 @@ export const WEDDING = {
   mapsEmbed:
     "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d601.3922690187136!2d107.24177221117876!3d11.803831276222764!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3173770645bbd2b1%3A0x5791ebcd405e4e46!2sM%E1%BB%99c%20An%20Spa%20%26%20PhysioTherapy!5e1!3m2!1svi!2sus!4v1784011076202!5m2!1svi!2sus",
 
-  /* URL production — dùng cho og:image trên Messenger/Zalo */
-  productionUrl: "https://xuanhau-thuyuyen-wedding-invitions.vercel.app",
+  /* URL production — fallback cho og:image khi build ngoài Vercel.
+     Trên Vercel, layout tự lấy domain từ VERCEL_PROJECT_PRODUCTION_URL nên đổi tên project không cần sửa đây */
+  productionUrl: "https://xuanhau-thuyuyen-wedding.vercel.app",
 } as const;
 
 export const COUPLE = `${WEDDING.groom} & ${WEDDING.bride}`;
