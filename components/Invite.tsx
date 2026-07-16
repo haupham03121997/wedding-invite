@@ -264,12 +264,24 @@ function Heading({ children }: { children: ReactNode }) {
   );
 }
 
-export default function Invite() {
+export type GuestRec = { id: number; name: string; side: string; hearts: number };
+export type MyRsvp = { name: string; side: string; count: number; vibe: string; wish: string | null };
+
+export default function Invite({
+  guestName,
+  guestRec: initialGuestRec,
+  myRsvp: initialMyRsvp,
+}: {
+  guestName: string;
+  guestRec: GuestRec | null;
+  myRsvp: MyRsvp | null;
+}) {
   const [opened, setOpened] = useState(false);
   const [gateGone, setGateGone] = useState(false);
   const [playing, setPlaying] = useState(false);
   const [galleryOpen, setGalleryOpen] = useState(false);
-  const [sent, setSent] = useState(false);
+  /* đã RSVP từ trước (server tra ra) thì vào thẳng màn cảm ơn */
+  const [sent, setSent] = useState(initialMyRsvp !== null);
   const [sending, setSending] = useState(false);
   const [wish, setWish] = useState("");
   const [wishes, setWishes] = useState<Wish[]>([]);
@@ -279,52 +291,22 @@ export default function Invite() {
 
   /* Comment nổi kiểu livestream: bật mặc định, nhớ lựa chọn của khách */
   const [liveChat, setLiveChat] = useState(true);
-  /* Link mời riêng: ?to=MÃ tra bảng guests → phong bì đề tên, form điền sẵn,
-     đã RSVP rồi thì hiện lại dữ liệu cũ. Không khớp mã thì coi ?to= là tên thường */
-  const [guest, setGuest] = useState("");
-  const [guestRec, setGuestRec] = useState<{ id: number; name: string; side: string } | null>(null);
-  type MyRsvp = { name: string; side: string; count: number; vibe: string; wish: string | null };
-  const [myRsvp, setMyRsvp] = useState<MyRsvp | null>(null);
+  /* Link mời riêng: server đã tra ?to=MÃ sẵn (app/page.tsx) → tên hiện ngay
+     từ HTML đầu tiên. Không khớp mã thì guestName là tên thường như cũ */
+  const guest = guestName;
+  const [guestRec, setGuestRec] = useState(initialGuestRec);
+  const [myRsvp, setMyRsvp] = useState(initialMyRsvp);
   /* RSVP khôi phục từ server (khách quay lại) — không bắn pháo tim như vừa gửi */
-  const [restored, setRestored] = useState(false);
+  const restored = initialMyRsvp !== null;
 
-  /* Khôi phục tùy chọn đã lưu + tên khách từ link mời, một lần sau hydrate.
-     localStorage/URL chỉ đọc được ở client nên không thể nằm trong state khởi tạo
+  /* Khôi phục tùy chọn đã lưu, một lần sau hydrate.
+     localStorage chỉ đọc được ở client nên không thể nằm trong state khởi tạo
      (server render sẽ lệch) — setState một lần trong effect ở đây là chủ đích. */
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (THEMES.some((t) => t.id === saved)) setThemeId(saved as ThemeId);
     if (localStorage.getItem("liveChat") === "off") setLiveChat(false);
-    const to = new URLSearchParams(window.location.search).get("to")?.trim();
-    console.log('🔥 ~ Invite ~ to:', to)
-    if (!to) return;
-    supabase
-      .from("guests")
-      .select("id,name,side")
-      .eq("code", to)
-      .maybeSingle()
-      .then(async ({ data: g }) => {
-        console.log('🔥 ~ Invite ~ g:', g)
-        if (!g) {
-          /* không phải mã khách → giữ hành vi cũ: đề thẳng tên lên thiệp */
-          setGuest(to.slice(0, 40));
-          return;
-        }
-        setGuest(g.name);
-        setGuestRec(g);
-        const { data: r } = await supabase
-          .from("rsvps")
-          .select("name,side,count,vibe,wish")
-          .eq("guest_id", g.id)
-          .limit(1)
-          .maybeSingle();
-        if (r) {
-          setMyRsvp(r);
-          setRestored(true);
-          setSent(true);
-        }
-      });
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
@@ -485,6 +467,8 @@ export default function Invite() {
     /* cộng lạc quan ngay cho mượt, gửi dồn sau 1s ngơi tay */
     heartPending.current += 1;
     setHeartTotal(heartKnown.current + heartPending.current);
+    /* sổ tim riêng của khách có mã mời cũng nhích theo từng chạm */
+    setGuestRec((g) => (g ? { ...g, hearts: g.hearts + 1 } : g));
     clearTimeout(heartFlushTimer.current);
     heartFlushTimer.current = setTimeout(flushHearts, 1000);
   };
@@ -997,6 +981,17 @@ export default function Invite() {
             </span>
           )}
         </button>
+      )}
+
+      {/* Sổ tim riêng của khách có mã mời: pill cạnh nút tim, số nhích theo từng chạm */}
+      {gateGone && guestRec && guestRec.hearts > 0 && (
+        <p className="pointer-events-none fixed bottom-17.5 left-16 z-40 flex h-7 items-center gap-1 rounded-full border border-paper/50 bg-paper/25 px-3 text-xs font-medium text-ink shadow-[0_2px_12px_rgba(44,39,36,0.12)] backdrop-blur-md min-[430px]:left-[calc(50%-151px)]">
+          Bạn đã thả
+          <span key={guestRec.hearts} className="cd-tick font-semibold text-accent">
+            {guestRec.hearts}
+          </span>
+          ❤️
+        </p>
       )}
 
       {/* Số combo hiện từ lần chạm thứ 2, nảy theo mỗi lần chạm và lớn dần */}
