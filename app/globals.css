@@ -245,6 +245,131 @@ button:active {
   }
 }
 
+/* Tên khách trên phong bì hiện dần từ trái sang như nét bút đang viết.
+   Chờ tên cô dâu chú rể hiện xong (1.5s) mới bắt đầu; inset âm trên/dưới
+   để không cắt nét lượn của font thư pháp */
+.handwrite {
+  animation: handwrite 1.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) 1.6s both;
+}
+@keyframes handwrite {
+  from {
+    clip-path: inset(-20% 100% -20% 0);
+  }
+  to {
+    clip-path: inset(-20% -10% -20% 0);
+  }
+}
+
+/* Lightbox mở bằng View Transition: ảnh "bay" từ thumbnail vào khung lớn */
+::view-transition-group(lb-photo) {
+  animation-duration: 0.35s;
+  animation-timing-function: var(--ease);
+}
+/* đang morph thì tắt animation scale cũ của dialog, tránh chạy chồng */
+html:active-view-transition dialog.lightbox[open] {
+  animation: none;
+}
+
+/* Pháo giấy bung từ trái tim lúc bóc thiệp: bay tỏa nhanh rồi lơ lửng tan
+   (giấy nhẹ nhiều lực cản → ease-out mạnh cho cảm giác trôi thật) */
+.confetti-bit {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  border-radius: 1px;
+  animation: confetti-fly 2s var(--ease) both;
+}
+@keyframes confetti-fly {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dx) * 1px), calc(var(--dy) * 1px))
+      rotate3d(1, 0.5, 0.3, calc(var(--rz) * 1deg));
+  }
+}
+
+/* Combo thả tim: số nhân nảy lên sau mỗi lần chạm liên tiếp */
+.combo-pop {
+  transform-origin: 50% 100%;
+  animation: combo-pop 0.25s var(--ease);
+}
+@keyframes combo-pop {
+  from {
+    transform: scale(1.45);
+  }
+}
+
+/* Đếm ngược: số mới nhích lên thay số cũ mỗi nhịp */
+.cd-tick {
+  animation: cd-tick 0.4s var(--ease);
+}
+@keyframes cd-tick {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+/* Double-tap ảnh trong lightbox: tim lớn nảy lên rồi bay nhẹ, kiểu Instagram */
+.lb-heart {
+  translate: -50% -50%;
+  animation: lb-heart 0.9s var(--ease) both;
+}
+@keyframes lb-heart {
+  0% {
+    opacity: 0;
+    transform: scale(0.4) rotate(-10deg);
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.12) rotate(4deg);
+  }
+  45% {
+    transform: scale(1);
+  }
+  75% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.05) translateY(-24px);
+  }
+}
+
+/* Thả tim / tặng quà: emoji bay lên từ điểm chạm, lượn nhẹ theo --dx rồi tan.
+   Ease-out mạnh: vọt lên nhanh, trôi chậm dần — đúng nhịp tim thả livestream */
+.float-up {
+  position: absolute;
+  translate: -50% -50%;
+  animation: float-up 1.4s var(--ease) both;
+  will-change: transform, opacity;
+}
+@keyframes float-up {
+  0% {
+    opacity: 0;
+    transform: translateY(6px) scale(0.4);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(calc(var(--dx) * 0.25px), -26px) scale(1.1);
+  }
+  70% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(var(--dx) * 1px), -190px) scale(0.8)
+      rotate(calc(var(--dx) * 0.3deg));
+  }
+}
+
 /* Ảnh story trôi chậm hơn nền khi cuộn (scroll-driven animation).
    Phóng 1.12 để có phần dư, trình duyệt chưa hỗ trợ thì ảnh đứng yên như cũ */
 @supports (animation-timeline: view()) {
@@ -468,6 +593,22 @@ dialog.lightbox[open] {
   .burst-heart {
     animation: none !important;
     opacity: 0;
+  }
+  /* Emoji thả tim/tặng quà chỉ là trang trí → ẩn hẳn */
+  .float-up {
+    animation: none !important;
+    opacity: 0;
+  }
+  .confetti-bit {
+    animation: none !important;
+    opacity: 0;
+  }
+  /* Combo/tim double-tap vẫn là phản hồi cho hành động → hiện tĩnh, không bay */
+  .combo-pop,
+  .cd-tick,
+  .lb-heart,
+  .handwrite {
+    animation: none !important;
   }
   dialog.lightbox[open] {
     animation: none !important;

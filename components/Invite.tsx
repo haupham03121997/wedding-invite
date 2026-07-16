@@ -3,7 +3,8 @@
 import { COUPLE, WEDDING } from "@/lib/wedding";
 import { createClient } from "@supabase/supabase-js";
 import Image from "next/image";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { flushSync } from "react-dom";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -18,6 +19,8 @@ const VIBES: [string, string][] = [
   ["💸", "Giàu sang"],
 ];
 const WISH_EMOJIS = ["❤️", "🥰", "💍", "🎊", "🍾", "😘"];
+const HEART_EMOJIS = ["❤️", "💖", "💕", "😍"];
+const GIFT_EMOJIS = ["💝", "🧧", "💰", "✨"];
 
 /* Tông màu thiệp: màu sắc định nghĩa trong globals.css ([data-theme]),
    ở đây chỉ chọn ảnh bìa/ảnh cuối hợp không khí từng tông */
@@ -115,13 +118,38 @@ const BURST: [number, number, number, number][] = [
   [67, 0.7, 1.0, 0.7],
 ];
 
+/* Pháo giấy lúc bóc thiệp: [dx, dy, delay s, thời gian s, % màu accent, góc xoay]
+   bung tỏa cầu từ vị trí trái tim, nửa bay lên nửa rơi xuống */
+const CONFETTI: [number, number, number, number, number, number][] = [
+  [-175, -190, 0, 1.9, 95, 520], [162, -230, 0.05, 2.1, 70, -640],
+  [-120, -300, 0.02, 2.3, 55, 430], [95, -150, 0.08, 1.7, 100, -380],
+  [-60, -260, 0.1, 2.0, 80, 590], [140, -80, 0.03, 1.8, 60, -470],
+  [-190, -40, 0.07, 2.2, 90, 350], [180, -320, 0.12, 2.4, 50, -560],
+  [-40, -350, 0.04, 2.2, 75, 610], [30, -210, 0.09, 1.9, 88, -420],
+  [-150, 120, 0.02, 2.0, 65, 480], [170, 180, 0.06, 2.3, 92, -530],
+  [-90, 240, 0.1, 2.4, 58, 390], [120, 280, 0.03, 2.2, 78, -600],
+  [-170, 300, 0.08, 2.5, 85, 450], [60, 330, 0.05, 2.3, 62, -490],
+  [-30, 260, 0.11, 2.1, 96, 570], [190, 60, 0.04, 1.8, 72, -360],
+  [-110, -120, 0.06, 1.9, 84, 500], [80, -280, 0.12, 2.2, 55, -450],
+  [-200, 200, 0.09, 2.4, 68, 620], [150, 340, 0.07, 2.5, 90, -540],
+  [10, -320, 0.03, 2.1, 76, 410], [-70, 310, 0.05, 2.3, 82, -580],
+  [100, 140, 0.1, 2.0, 64, 460], [-160, -270, 0.08, 2.2, 94, -510],
+  [40, 220, 0.02, 1.9, 58, 550], [-15, -180, 0.11, 1.8, 86, -400],
+];
+
 /* Mốc đếm ngược: ngày cưới + giờ làm lễ */
 const [CD_H, CD_MIN] = WEDDING.ceremony.hour.split(":").map(Number);
 const CD_TARGET = new Date(wd.getFullYear(), wd.getMonth(), wd.getDate(), CD_H, CD_MIN).getTime();
 
-function Countdown() {
+function Countdown({ onZero }: { onZero: () => void }) {
   /* null tới khi mount xong: server không biết giờ client, tránh lệch hydration */
   const [left, setLeft] = useState<number | null>(null);
+  const done = left === 0;
+
+  /* Đúng ngày cưới: pháo giấy bung một lần khi dòng chúc mừng vào tầm nhìn
+     (đếm về 0 ngay trước mắt cũng trúng nhánh này vì lúc đó phần tử đang hiện) */
+  const doneRef = useRef<HTMLParagraphElement>(null);
+  const fired = useRef(false);
 
   useEffect(() => {
     const tick = () => setLeft(Math.max(0, CD_TARGET - Date.now()));
@@ -130,9 +158,23 @@ function Countdown() {
     return () => clearInterval(id);
   }, []);
 
-  if (left === 0) {
+  useEffect(() => {
+    const el = doneRef.current;
+    if (!done || !el || fired.current) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !fired.current) {
+        fired.current = true;
+        onZero();
+        io.disconnect();
+      }
+    }, { threshold: 0.5 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [done, onZero]);
+
+  if (done) {
     return (
-      <p className="text-center font-display text-2xl italic">
+      <p ref={doneRef} className="text-center font-display text-2xl italic">
         Ngày chung đôi đã tới 🎉
       </p>
     );
@@ -151,7 +193,8 @@ function Countdown() {
     <div className="grid min-h-20 grid-cols-4 gap-2">
       {cells.map(([n, label]) => (
         <div key={label} className="rounded-xl border border-line bg-field py-3 text-center">
-          <p className="font-display font-bold text-4xl leading-none text-accent">
+          {/* key theo giá trị: chỉ ô vừa đổi số mới chạy cd-tick */}
+          <p key={n} className="cd-tick font-display font-bold text-4xl leading-none text-accent">
             {String(n).padStart(2, "0")}
           </p>
           <p className="mt-1.5 text-xs tracking-widest text-muted uppercase">{label}</p>
@@ -236,8 +279,14 @@ export default function Invite() {
 
   /* Comment nổi kiểu livestream: bật mặc định, nhớ lựa chọn của khách */
   const [liveChat, setLiveChat] = useState(true);
-  /* Link mời riêng: ?to=Tên → phong bì đề tên khách, form điền sẵn */
+  /* Link mời riêng: ?to=MÃ tra bảng guests → phong bì đề tên, form điền sẵn,
+     đã RSVP rồi thì hiện lại dữ liệu cũ. Không khớp mã thì coi ?to= là tên thường */
   const [guest, setGuest] = useState("");
+  const [guestRec, setGuestRec] = useState<{ id: number; name: string; side: string } | null>(null);
+  type MyRsvp = { name: string; side: string; count: number; vibe: string; wish: string | null };
+  const [myRsvp, setMyRsvp] = useState<MyRsvp | null>(null);
+  /* RSVP khôi phục từ server (khách quay lại) — không bắn pháo tim như vừa gửi */
+  const [restored, setRestored] = useState(false);
 
   /* Khôi phục tùy chọn đã lưu + tên khách từ link mời, một lần sau hydrate.
      localStorage/URL chỉ đọc được ở client nên không thể nằm trong state khởi tạo
@@ -247,8 +296,35 @@ export default function Invite() {
     const saved = localStorage.getItem("theme");
     if (THEMES.some((t) => t.id === saved)) setThemeId(saved as ThemeId);
     if (localStorage.getItem("liveChat") === "off") setLiveChat(false);
-    const to = new URLSearchParams(window.location.search).get("to");
-    if (to?.trim()) setGuest(to.trim().slice(0, 40));
+    const to = new URLSearchParams(window.location.search).get("to")?.trim();
+    console.log('🔥 ~ Invite ~ to:', to)
+    if (!to) return;
+    supabase
+      .from("guests")
+      .select("id,name,side")
+      .eq("code", to)
+      .maybeSingle()
+      .then(async ({ data: g }) => {
+        console.log('🔥 ~ Invite ~ g:', g)
+        if (!g) {
+          /* không phải mã khách → giữ hành vi cũ: đề thẳng tên lên thiệp */
+          setGuest(to.slice(0, 40));
+          return;
+        }
+        setGuest(g.name);
+        setGuestRec(g);
+        const { data: r } = await supabase
+          .from("rsvps")
+          .select("name,side,count,vibe,wish")
+          .eq("guest_id", g.id)
+          .limit(1)
+          .maybeSingle();
+        if (r) {
+          setMyRsvp(r);
+          setRestored(true);
+          setSent(true);
+        }
+      });
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
 
@@ -271,6 +347,147 @@ export default function Invite() {
       localStorage.setItem("liveChat", v ? "off" : "on");
       return !v;
     });
+
+  /* Pháo giấy: bung lúc bóc thiệp, và đúng ngày cưới thì bung ở khối đếm ngược */
+  const [confetti, setConfetti] = useState(false);
+  const confettiTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const fireConfetti = useCallback(() => {
+    setConfetti(false);
+    clearTimeout(confettiTimer.current);
+    /* rAF: gỡ rồi gắn lại qua một frame để animation chạy lại từ đầu nếu bung lần nữa */
+    requestAnimationFrame(() => setConfetti(true));
+    confettiTimer.current = setTimeout(() => setConfetti(false), 2800);
+  }, []);
+
+  /* Thả tim / tặng quà: chạm là emoji bay lên từ đúng điểm chạm.
+     Một emitter dùng chung cho nút thả tim, sao chép STK, emoji lời chúc, chọn vibe */
+  type Float = { id: number; x: number; y: number; emoji: string; dx: number; dur: number; size: number };
+  const floatId = useRef(0);
+  const [floats, setFloats] = useState<Float[]>([]);
+  const emitAt = (x: number, y: number, emojis: string[], count = 6) => {
+    const batch = Array.from({ length: count }, () => ({
+      id: floatId.current++,
+      x,
+      y,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)],
+      dx: (Math.random() - 0.5) * 90,
+      dur: 1.1 + Math.random() * 0.7,
+      size: 0.9 + Math.random() * 0.8,
+    }));
+    /* spam chạm thoải mái, giữ tối đa 60 particle trên màn */
+    setFloats((f) => [...f, ...batch].slice(-60));
+    setTimeout(() => setFloats((f) => f.filter((p) => !batch.includes(p))), 2000);
+  };
+  const emit = (e: React.MouseEvent, emojis: string[], count = 6) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    /* bàn phím "click" không có tọa độ → bay từ tâm nút */
+    emitAt(e.clientX || r.left + r.width / 2, e.clientY || r.top + r.height / 2, emojis, count);
+  };
+
+  /* Tiếng "pop" khi thả tim: WebAudio synth nên không cần file âm thanh.
+     Cao độ nhích dần theo combo cho cảm giác dồn nhịp, chạm nhiều càng vui tai */
+  const popCtx = useRef<AudioContext | null>(null);
+  const pop = (step = 0) => {
+    if (typeof AudioContext === "undefined") return;
+    const ctx = (popCtx.current ??= new AudioContext());
+    if (ctx.state === "suspended") ctx.resume();
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const f = 520 * Math.min(2, 1 + step * 0.06);
+    osc.frequency.setValueAtTime(f, t);
+    osc.frequency.exponentialRampToValueAtTime(f * 2.2, t + 0.02);
+    osc.frequency.exponentialRampToValueAtTime(f * 0.9, t + 0.12);
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.exponentialRampToValueAtTime(0.09, t + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + 0.18);
+  };
+
+  /* Combo thả tim: chạm liên tiếp trong 0.9s thì số nhân lớn dần */
+  const [combo, setCombo] = useState(0);
+  const comboTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+
+  /* Tổng tim chung mọi khách, đồng bộ qua bảng hearts (id=1) trên Supabase.
+     heartTotal = hiển thị (gồm tap chưa gửi); heartKnown = số server đã xác nhận.
+     Chưa tạo bảng thì các lời gọi fail im lặng, nút thả tim vẫn chạy như cũ */
+  const [heartTotal, setHeartTotal] = useState(0);
+  const heartKnown = useRef(0);
+  const heartPending = useRef(0);
+  const heartInFlight = useRef(false);
+  const heartFlushTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const heartBtnRef = useRef<HTMLButtonElement>(null);
+
+  /* Gửi dồn: mỗi đợt tap chỉ tốn một request; giữ pending tới khi server trả lời
+     để nhận diện echo realtime của chính mình (không tự thả tim trùng) */
+  const flushHearts = () => {
+    if (heartInFlight.current || !heartPending.current) return;
+    heartInFlight.current = true;
+    const n = heartPending.current;
+    supabase
+      /* khách có mã mời thì tim được ghi thêm vào sổ riêng (guests.hearts) */
+      .rpc("give_hearts", { n, guest: guestRec?.id ?? null })
+      .then(({ data }) => {
+        heartInFlight.current = false;
+        if (typeof data !== "number") {
+          /* bảng chưa tạo / mất mạng: bỏ số chưa gửi để không retry vô hạn */
+          heartPending.current = 0;
+          return;
+        }
+        heartPending.current -= n;
+        heartKnown.current = Math.max(heartKnown.current, data);
+        setHeartTotal(heartKnown.current + heartPending.current);
+        if (heartPending.current) flushHearts();
+      });
+  };
+
+  useEffect(() => {
+    supabase
+      .from("hearts")
+      .select("count")
+      .eq("id", 1)
+      .single()
+      .then(({ data }) => {
+        if (!data) return;
+        heartKnown.current = data.count;
+        setHeartTotal(data.count + heartPending.current);
+      });
+    const ch = supabase
+      .channel("hearts")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "hearts" },
+        (p) => {
+          const next = (p.new as { count: number }).count;
+          /* phần vượt quá (số đã biết + số mình chưa gửi) là tim của khách khác */
+          const delta = next - heartKnown.current - heartPending.current;
+          heartKnown.current = Math.max(heartKnown.current, next);
+          setHeartTotal(heartKnown.current + heartPending.current);
+          const r = heartBtnRef.current?.getBoundingClientRect();
+          if (delta > 0 && r)
+            emitAt(r.left + r.width / 2, r.top + r.height / 2, HEART_EMOJIS, Math.min(delta, 5));
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(ch);
+    };
+  }, []);
+
+  const tapHeart = (e: React.MouseEvent) => {
+    emit(e, HEART_EMOJIS, 7);
+    pop(combo);
+    setCombo((c) => c + 1);
+    clearTimeout(comboTimer.current);
+    comboTimer.current = setTimeout(() => setCombo(0), 900);
+    /* cộng lạc quan ngay cho mượt, gửi dồn sau 1s ngơi tay */
+    heartPending.current += 1;
+    setHeartTotal(heartKnown.current + heartPending.current);
+    clearTimeout(heartFlushTimer.current);
+    heartFlushTimer.current = setTimeout(flushHearts, 1000);
+  };
 
   /* Hộp mừng cưới: đánh dấu STK vừa sao chép để đổi nhãn nút trong 2s */
   const [copied, setCopied] = useState<string | null>(null);
@@ -301,12 +518,38 @@ export default function Invite() {
   const [lbIndex, setLbIndex] = useState(0);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const slidesRef = useRef<HTMLDivElement>(null);
-  const openLightbox = (i: number) => {
-    setLightbox(i);
-    setLbIndex(i);
+  /* Mở lightbox bằng View Transition: ảnh nhỏ "bay" liền mạch vào khung lớn.
+     Gắn tạm view-transition-name lên đúng thumbnail vừa chạm (tên phải duy nhất),
+     morph xong thì gỡ. Trình duyệt cũ / giảm chuyển động → mở kiểu thường */
+  const openLightbox = (i: number, e?: React.MouseEvent) => {
+    const doc = document as Document & {
+      startViewTransition?: (cb: () => void) => { finished: Promise<void> };
+    };
+    const thumb = (e?.currentTarget as HTMLElement | undefined)?.querySelector("img");
+    const open = () => {
+      setLightbox(i);
+      setLbIndex(i);
+    };
+    if (
+      !doc.startViewTransition ||
+      !thumb ||
+      matchMedia("(prefers-reduced-motion: reduce)").matches
+    ) {
+      open();
+      return;
+    }
+    thumb.style.setProperty("view-transition-name", "lb-photo");
+    doc.startViewTransition(() => {
+      flushSync(open);
+      /* gỡ tên NGAY sau khi mở: lúc chụp trạng thái mới, tên chỉ được phép
+         nằm trên một phần tử — trùng tên là trình duyệt hủy luôn transition */
+      thumb.style.removeProperty("view-transition-name");
+    });
   };
   const sheetRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
+  /* layout effect thay effect thường: dialog phải mở xong TRONG flushSync
+     của startViewTransition, để transition chụp đúng trạng thái cuối */
+  useLayoutEffect(() => {
     const d = dialogRef.current;
     if (lightbox === null || !d) return;
     /* dọn dấu vết lần vuốt-đóng trước rồi mới mở */
@@ -329,9 +572,24 @@ export default function Invite() {
   /* Vuốt xuống để đóng lightbox: ảnh theo ngón tay, nền nhạt dần, thả đủ xa thì đóng.
      Chỉ nhận cử chỉ dọc rõ rệt để không giành với vuốt ngang chuyển ảnh */
   const lbDrag = useRef({ x0: 0, y0: 0, dy: 0, mode: "idle" as "idle" | "drag" | "scroll" });
+
+  /* Double-tap ảnh → tim lớn nảy lên tại điểm chạm, kiểu Instagram.
+     dialog nằm top-layer nên tim phải vẽ bên trong sheet, tọa độ đổi về gốc sheet */
+  const [lbHeart, setLbHeart] = useState<{ id: number; x: number; y: number } | null>(null);
+  const lbLastTap = useRef(0);
+  const popLbHeart = (cx: number, cy: number) => {
+    const r = sheetRef.current?.getBoundingClientRect();
+    const id = ++floatId.current;
+    setLbHeart({ id, x: cx - (r?.left ?? 0), y: cy - (r?.top ?? 0) });
+    setTimeout(() => setLbHeart((h) => (h?.id === id ? null : h)), 950);
+  };
+
   const onLbTouchStart = (e: React.TouchEvent) => {
     const t = e.touches[0];
     lbDrag.current = { x0: t.clientX, y0: t.clientY, dy: 0, mode: "idle" };
+    const now = performance.now();
+    if (now - lbLastTap.current < 300) popLbHeart(t.clientX, t.clientY);
+    lbLastTap.current = now;
   };
   const onLbTouchMove = (e: React.TouchEvent) => {
     const d = lbDrag.current;
@@ -419,6 +677,7 @@ export default function Invite() {
     /* Reload giữa trang: trình duyệt khôi phục vị trí scroll cũ, kéo về đầu trước khi mở */
     window.scrollTo(0, 0);
     setOpened(true);
+    fireConfetti();
     const audio = audioRef.current;
     if (audio) audio.volume = 0;
     audio
@@ -450,15 +709,16 @@ export default function Invite() {
     e.preventDefault();
     setSending(true);
     const f = new FormData(e.currentTarget);
+    const payload = {
+      name: String(f.get("name") ?? ""),
+      side: String(f.get("side") ?? ""),
+      count: Number(f.get("count")),
+      vibe: String(f.get("vibe") ?? ""),
+      wish: String(f.get("wish") ?? ""),
+    };
     const { data, error } = await supabase
       .from("rsvps")
-      .insert({
-        name: f.get("name"),
-        side: f.get("side"),
-        count: Number(f.get("count")),
-        vibe: f.get("vibe"),
-        wish: f.get("wish"),
-      })
+      .insert({ ...payload, guest_id: guestRec?.id ?? null })
       .select("id,name,vibe,wish")
       .single();
     setSending(false);
@@ -468,6 +728,7 @@ export default function Invite() {
     }
     /* Lời chúc vừa gửi hiện ngay đầu sổ lưu bút */
     if (data?.wish) setWishes((w) => [data, ...w]);
+    setMyRsvp(payload);
     setSent(true);
   };
 
@@ -543,8 +804,8 @@ export default function Invite() {
               </p>
               {/* Link mời riêng: đề tên khách như thiệp viết tay */}
               {guest && (
-                <p className="mt-4 font-script text-2xl text-accent">
-                  Thân mời {guest}
+                <p className="handwrite mt-4 font-script text-2xl text-accent">
+                  Thân mời <span className='font-semibold'>{guest}</span>
                 </p>
               )}
 
@@ -579,6 +840,31 @@ export default function Invite() {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ===== Pháo giấy bung qua khe phong bì đang tách ===== */}
+      {confetti && (
+        <div
+          className="pointer-events-none fixed inset-x-0 top-0 z-50 mx-auto h-dvh max-w-107.5 overflow-hidden"
+          aria-hidden="true"
+        >
+          {CONFETTI.map(([dx, dy, delay, dur, mix, rz], i) => (
+            <span
+              key={i}
+              className="confetti-bit"
+              style={{
+                width: 6 + (i % 3),
+                height: 10 + (i % 4),
+                background: `color-mix(in srgb, var(--accent) ${mix}%, var(--paper))`,
+                animationDelay: `${delay}s`,
+                animationDuration: `${dur}s`,
+                ["--dx" as string]: dx,
+                ["--dy" as string]: dy,
+                ["--rz" as string]: rz,
+              }}
+            />
+          ))}
         </div>
       )}
 
@@ -692,6 +978,58 @@ export default function Invite() {
             {!liveChat && <line x1="4" y1="20" x2="20" y2="4" />}
           </svg>
         </button>
+      )}
+
+      {/* ===== Nút thả tim: chạm liên tục cho tim bay như livestream ===== */}
+      {gateGone && (
+        <button
+          ref={heartBtnRef}
+          type="button"
+          onClick={tapHeart}
+          aria-label="Thả tim"
+          className="fixed bottom-16 left-4 z-40 flex h-10 w-10 items-center justify-center rounded-full border border-paper/50 bg-paper/25 text-accent shadow-[0_2px_12px_rgba(44,39,36,0.12)] backdrop-blur-md min-[430px]:left-[calc(50%-199px)]"
+        >
+          <HeartIcon className="h-5 w-5" />
+          {/* tổng tim cả trang, mọi khách cùng thấy */}
+          {heartTotal > 0 && (
+            <span className="pointer-events-none absolute -top-2 -right-2.5 rounded-full bg-accent px-1.5 py-0.5 text-[10px] font-semibold leading-none text-paper">
+              {new Intl.NumberFormat("vi", { notation: "compact" }).format(heartTotal)}
+            </span>
+          )}
+        </button>
+      )}
+
+      {/* Số combo hiện từ lần chạm thứ 2, nảy theo mỗi lần chạm và lớn dần */}
+      {combo > 1 && (
+        <p
+          key={combo}
+          aria-hidden="true"
+          className="combo-pop pointer-events-none fixed bottom-27 left-4 z-40 w-10 text-center font-display font-bold text-accent [text-shadow:0_1px_10px_var(--paper)] min-[430px]:left-[calc(50%-199px)]"
+          style={{ fontSize: `${Math.min(1.375 + combo * 0.055, 2.5)}rem` }}
+        >
+          ×{combo}
+        </p>
+      )}
+
+      {/* ===== Emoji bay lên từ điểm chạm (thả tim / tặng quà / lời chúc) ===== */}
+      {floats.length > 0 && (
+        <div className="pointer-events-none fixed inset-0 z-50" aria-hidden="true">
+          {floats.map((p) => (
+            <span
+              key={p.id}
+              className="float-up"
+              style={{
+                left: p.x,
+                top: p.y,
+                fontSize: `${p.size * 1.375}rem`,
+                animationDuration: `${p.dur}s`,
+                ["--dx" as string]: p.dx,
+              }}
+            >
+              {p.emoji}
+            </span>
+          ))}
+        </div>
       )}
 
       {/* ===== Trang bìa ===== */}
@@ -914,7 +1252,7 @@ export default function Invite() {
             <p className="text-xs tracking-[0.3em] text-accent uppercase">Đếm ngược</p>
             <span className="h-px flex-1 bg-linear-to-r from-accent/40 to-transparent" />
           </div>
-          <Countdown />
+          <Countdown onZero={fireConfetti} />
         </Reveal>
       </section>
 
@@ -1072,7 +1410,7 @@ export default function Invite() {
                 <Reveal key={row.img.src} effect="tile">
                   <button
                     type="button"
-                    onClick={() => openLightbox(row.gi)}
+                    onClick={(e) => openLightbox(row.gi, e)}
                     aria-label={`Phóng to ${row.img.alt}`}
                     className="block w-full cursor-zoom-in"
                   >
@@ -1104,7 +1442,7 @@ export default function Invite() {
                         <Reveal key={img.src} effect="tile" delay={(i % 3) * 120 + c * 60}>
                           <button
                             type="button"
-                            onClick={() => openLightbox(gi)}
+                            onClick={(e) => openLightbox(gi, e)}
                             aria-label={`Phóng to ${img.alt}`}
                             className="block w-full cursor-zoom-in overflow-clip rounded-xl"
                           >
@@ -1147,30 +1485,60 @@ export default function Invite() {
 
         {sent ? (
           <div className="relative text-center">
-            {/* pháo tim bung lên một lần mừng lời chúc vừa gửi */}
-            <div className="pointer-events-none absolute inset-x-0 -top-6 h-36" aria-hidden="true">
-              {BURST.map(([left, delay, dur, size], i) => (
-                <span
-                  key={i}
-                  className="burst-heart"
-                  style={{
-                    left: `${left}%`,
-                    animationDelay: `${delay}s`,
-                    animationDuration: `${dur}s`,
-                    ["--s" as string]: size,
-                  }}
-                />
-              ))}
-            </div>
+            {/* pháo tim chỉ bung khi VỪA gửi, khách quay lại xem thì thôi */}
+            {!restored && (
+              <div className="pointer-events-none absolute inset-x-0 -top-6 h-36" aria-hidden="true">
+                {BURST.map(([left, delay, dur, size], i) => (
+                  <span
+                    key={i}
+                    className="burst-heart"
+                    style={{
+                      left: `${left}%`,
+                      animationDelay: `${delay}s`,
+                      animationDuration: `${dur}s`,
+                      ["--s" as string]: size,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
             <p className="text-base leading-relaxed">
-              Cảm ơn bạn đã xác nhận! 🥰
-              <br />
-              Lời chúc của bạn đã nằm gọn trong sổ lưu bút phía dưới 👇
+              {restored ? (
+                <>Bạn đã xác nhận tham dự rồi nè 🥰</>
+              ) : (
+                <>
+                  Cảm ơn bạn đã xác nhận! 🥰
+                  <br />
+                  Lời chúc của bạn đã nằm gọn trong sổ lưu bút phía dưới 👇
+                </>
+              )}
             </p>
+            {/* Nhắc lại những gì đã gửi, trình bày như một trang lưu bút */}
+            {myRsvp && (
+              <figure className="relative mx-auto mt-8 max-w-80 rotate-1 rounded-xl border border-line bg-field px-5 pt-5 pb-4 text-left shadow-[0_2px_10px_rgba(44,39,36,0.07)]">
+                <span
+                  className="absolute -top-3.5 right-4 rotate-12 text-2xl drop-shadow-sm"
+                  aria-hidden="true"
+                >
+                  {myRsvp.vibe}
+                </span>
+                {myRsvp.wish && (
+                  <blockquote className="text-base leading-relaxed">{myRsvp.wish}</blockquote>
+                )}
+                <figcaption className="mt-2 text-right font-display text-lg text-muted italic">
+                  — {myRsvp.name} · {myRsvp.side} · {myRsvp.count} người
+                </figcaption>
+              </figure>
+            )}
           </div>
         ) : (
           <Reveal>
-            <form onSubmit={submitRsvp} className="space-y-5">
+            {/* key: form uncontrolled, remount khi tra ra khách để nhận tên + bên điền sẵn */}
+            <form
+              onSubmit={submitRsvp}
+              key={guestRec ? `g-${guestRec.id}` : guest || "anon"}
+              className="space-y-5"
+            >
               <div>
                 <label htmlFor="name" className="mb-1.5 block text-base font-medium">
                   Bạn tên là gì nhỉ? ✍️
@@ -1181,8 +1549,6 @@ export default function Invite() {
                   type="text"
                   required
                   autoComplete="name"
-                  /* key: input uncontrolled, remount để nhận tên từ link mời riêng */
-                  key={guest || "no-guest"}
                   defaultValue={guest}
                   placeholder="Nhập tên đáng yêu của bạn..."
                   className="w-full rounded-lg border border-line bg-field px-4 py-3 text-base outline-none placeholder:text-muted focus:border-accent focus:ring-2 focus:ring-accent/30"
@@ -1204,6 +1570,7 @@ export default function Invite() {
                         name="side"
                         value={side}
                         required
+                        defaultChecked={guestRec?.side === side}
                         className="sr-only"
                       />
                       {side}
@@ -1237,6 +1604,10 @@ export default function Invite() {
                   {VIBES.map(([emoji, label], i) => (
                     <label
                       key={label}
+                      /* label bắn thêm 1 click tổng hợp lên input → chỉ nhận click gốc */
+                      onClick={(e) => {
+                        if ((e.target as HTMLElement).tagName !== "INPUT") emit(e, [emoji], 4);
+                      }}
                       className="flex cursor-pointer flex-col items-center gap-1 rounded-lg border border-line bg-field py-3 text-2xl transition-all duration-200 has-checked:-translate-y-0.5 has-checked:border-accent has-checked:bg-accent/10 has-checked:shadow-[0_4px_12px_var(--accent-glow-soft)] has-focus-visible:ring-2 has-focus-visible:ring-accent/40"
                     >
                       <input
@@ -1279,7 +1650,10 @@ export default function Invite() {
                       key={em}
                       type="button"
                       aria-label={`Thêm ${em} vào lời chúc`}
-                      onClick={() => setWish((w) => (w + em).slice(0, 300))}
+                      onClick={(e) => {
+                        setWish((w) => (w + em).slice(0, 300));
+                        emit(e, [em], 3);
+                      }}
                       className="flex h-11 flex-1 items-center justify-center rounded-full border border-line bg-field text-lg transition-colors duration-200 hover:border-accent hover:bg-accent/10"
                     >
                       {em}
@@ -1340,7 +1714,11 @@ export default function Invite() {
                   <p className="mt-1 text-sm">{acc.holder}</p>
                   <button
                     type="button"
-                    onClick={() => copyAccount(acc.number)}
+                    onClick={(e) => {
+                      copyAccount(acc.number);
+                      emit(e, GIFT_EMOJIS, 8);
+                      pop(4);
+                    }}
                     className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full border border-accent px-5 text-sm font-medium text-accent transition-colors duration-200 hover:bg-accent hover:text-paper"
                   >
                     {copied === acc.number ? "Đã chép ✓" : "Sao chép STK"}
@@ -1431,8 +1809,19 @@ export default function Invite() {
             onTouchMove={onLbTouchMove}
             onTouchEnd={onLbTouchEnd}
             onTouchCancel={onLbTouchEnd}
+            onDoubleClick={(e) => popLbHeart(e.clientX, e.clientY)}
             className="relative h-full"
           >
+            {lbHeart && (
+              <span
+                key={lbHeart.id}
+                aria-hidden="true"
+                className="lb-heart pointer-events-none absolute z-10"
+                style={{ left: lbHeart.x, top: lbHeart.y }}
+              >
+                <HeartIcon className="h-24 w-24 text-paper filter-[drop-shadow(0_4px_16px_rgba(0,0,0,0.35))]" />
+              </span>
+            )}
             <div
               ref={slidesRef}
               onScroll={(e) =>
@@ -1443,7 +1832,7 @@ export default function Invite() {
               /* touch-pan-x: trình duyệt lo vuốt ngang, vuốt dọc nhường cho cử chỉ kéo-đóng */
               className="flex h-full touch-pan-x snap-x snap-mandatory overflow-x-auto overscroll-contain"
             >
-              {GALLERY.map((img) => (
+              {GALLERY.map((img, i) => (
                 <div
                   key={img.src}
                   className="flex h-full w-full flex-none snap-center items-center justify-center px-2"
@@ -1454,6 +1843,8 @@ export default function Invite() {
                     width={img.w}
                     height={img.h}
                     sizes="430px"
+                    /* slide đang xem mang cùng tên với thumbnail vừa chạm → morph nối liền */
+                    style={i === lbIndex ? { viewTransitionName: "lb-photo" } : undefined}
                     className="max-h-[85dvh] w-auto max-w-full rounded-lg object-contain"
                   />
                 </div>

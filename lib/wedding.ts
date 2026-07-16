@@ -24,8 +24,8 @@ export const WEDDING = {
   ceremony: {
     title: "Lễ Vu Quy",
     side: "Nhà gái",
-    hosts: "Bà Nguyễn Văn A", // TODO: điền họ tên đầy đủ của mẹ cô dâu
-    hour: "09:00",
+    hosts: "Bà Nguyễn Thị Thanh Thủy", // TODO: điền họ tên đầy đủ của mẹ cô dâu
+    hour: "08:00",
     venue: "Tư gia nhà gái",
     address: "Thôn Vĩnh Thiện, Xã Bù Đăng, Tp.Đồng Nai",
   },
