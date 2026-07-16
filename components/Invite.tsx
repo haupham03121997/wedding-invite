@@ -413,14 +413,19 @@ export default function Invite({
       .rpc("give_hearts", { n, guest: guestRec?.id ?? null })
       .then(({ data }) => {
         heartInFlight.current = false;
-        if (typeof data !== "number") {
+        const d = data as { total: number; mine: number | null } | null;
+        if (typeof d?.total !== "number") {
           /* bảng chưa tạo / mất mạng: bỏ số chưa gửi để không retry vô hạn */
           heartPending.current = 0;
           return;
         }
         heartPending.current -= n;
-        heartKnown.current = Math.max(heartKnown.current, data);
+        heartKnown.current = Math.max(heartKnown.current, d.total);
         setHeartTotal(heartKnown.current + heartPending.current);
+        /* sổ tim riêng lấy theo server: tự khớp cả tim thả từ phiên/máy khác */
+        const mine = d.mine;
+        if (typeof mine === "number")
+          setGuestRec((g) => (g ? { ...g, hearts: mine + heartPending.current } : g));
         if (heartPending.current) flushHearts();
       });
   };
@@ -983,14 +988,19 @@ export default function Invite({
         </button>
       )}
 
-      {/* Sổ tim riêng của khách có mã mời: pill cạnh nút tim, số nhích theo từng chạm */}
+      {/* Sổ tim riêng của khách có mã mời: tim nhỏ + con số, không câu chữ rườm rà */}
       {gateGone && guestRec && guestRec.hearts > 0 && (
-        <p className="pointer-events-none fixed bottom-17.5 left-16 z-40 flex h-7 items-center gap-1 rounded-full border border-paper/50 bg-paper/25 px-3 text-xs font-medium text-ink shadow-[0_2px_12px_rgba(44,39,36,0.12)] backdrop-blur-md min-[430px]:left-[calc(50%-151px)]">
-          Bạn đã thả
-          <span key={guestRec.hearts} className="cd-tick font-semibold text-accent">
-            {guestRec.hearts}
+        <p
+          aria-label={`Bạn đã thả ${guestRec.hearts} tim`}
+          className="pointer-events-none fixed bottom-17.5 left-16 z-40 flex h-7 items-center gap-1 rounded-full border border-paper/50 bg-paper/25 px-2.5 shadow-[0_2px_12px_rgba(44,39,36,0.12)] backdrop-blur-md min-[430px]:left-[calc(50%-151px)]"
+        >
+          <HeartIcon aria-hidden="true" className="h-3 w-3 text-accent" />
+          <span
+            key={guestRec.hearts}
+            className="cd-tick font-display text-sm font-semibold leading-none text-accent"
+          >
+            {new Intl.NumberFormat("vi").format(guestRec.hearts)}
           </span>
-          ❤️
         </p>
       )}
 
