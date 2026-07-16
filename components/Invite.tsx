@@ -1098,12 +1098,35 @@ export default function Invite({
         <span className="h-px flex-1 bg-linear-to-r from-accent/40 to-transparent" />
       </div>
       <section className="px-6 pb-16">
+        {/* Lễ Vu Quy (nhà gái đứng mời) → cô dâu bên trái, đọc trước */}
         <div className="grid grid-cols-2 gap-x-4">
           <Reveal className="text-center">
             <p className="text-xs font-medium tracking-[0.3em] text-accent uppercase">
-              Nhà trai
+              Nhà gái
             </p>
             {/* min-h giữ hai cột thẳng hàng khi số dòng tên bố mẹ lệch nhau */}
+            <div className="mt-2 min-h-10 space-y-0.5">
+              {WEDDING.brideFamily.map((name) => (
+                <p key={name} className="text-sm leading-5">{name}</p>
+              ))}
+            </div>
+            <p className="mt-4 text-xs tracking-[0.25em] text-muted uppercase">Cô dâu</p>
+            <p className="mt-1.5 font-script text-3xl whitespace-nowrap">{WEDDING.bride}</p>
+            <figure className="relative mt-5 aspect-3/4 overflow-hidden rounded-xl">
+              <Image
+                src="/assets/gallery/IMG_4961.jpg"
+                alt={`Cô dâu ${WEDDING.bride}`}
+                fill
+                sizes="180px"
+                className="object-cover object-top"
+              />
+            </figure>
+          </Reveal>
+
+          <Reveal className="text-center" delay={120}>
+            <p className="text-xs font-medium tracking-[0.3em] text-accent uppercase">
+              Nhà trai
+            </p>
             <div className="mt-2 min-h-10 space-y-0.5">
               {WEDDING.groomFamily.map((name) => (
                 <p key={name} className="text-sm leading-5">{name}</p>
@@ -1119,28 +1142,6 @@ export default function Invite({
                 sizes="360px"
                 /* ảnh gốc full-body: zoom bán thân, origin 30% để đỉnh đầu ngang với ảnh cô dâu */
                 className="origin-[50%_30%] scale-160 object-cover object-top"
-              />
-            </figure>
-          </Reveal>
-
-          <Reveal className="text-center" delay={120}>
-            <p className="text-xs font-medium tracking-[0.3em] text-accent uppercase">
-              Nhà gái
-            </p>
-            <div className="mt-2 min-h-10 space-y-0.5">
-              {WEDDING.brideFamily.map((name) => (
-                <p key={name} className="text-sm leading-5">{name}</p>
-              ))}
-            </div>
-            <p className="mt-4 text-xs tracking-[0.25em] text-muted uppercase">Cô dâu</p>
-            <p className="mt-1.5 font-script text-3xl whitespace-nowrap">{WEDDING.bride}</p>
-            <figure className="relative mt-5 aspect-3/4 overflow-hidden rounded-xl">
-              <Image
-                src="/assets/gallery/IMG_4961.jpg"
-                alt={`Cô dâu ${WEDDING.bride}`}
-                fill
-                sizes="180px"
-                className="object-cover object-top"
               />
             </figure>
           </Reveal>
