@@ -774,8 +774,8 @@ export default function Invite() {
                 alt={`Chú rể ${WEDDING.groom}`}
                 fill
                 sizes="360px"
-                /* ảnh gốc full-body: zoom bán thân cho cân với ảnh cô dâu */
-                className="origin-top scale-160 object-cover object-top"
+                /* ảnh gốc full-body: zoom bán thân, origin 30% để đỉnh đầu ngang với ảnh cô dâu */
+                className="origin-[50%_30%] scale-160 object-cover object-top"
               />
             </figure>
           </Reveal>
