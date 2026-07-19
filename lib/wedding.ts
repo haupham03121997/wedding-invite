@@ -19,7 +19,7 @@ export const WEDDING = {
   /* Bố mẹ hai bên — hiện ở khối giới thiệu cô dâu chú rể.
      Nhà gái chỉ ghi mẹ (ba đã mất). */
   groomFamily: ["Ông Phạm Dân", "Bà Lê Thị Hiền"],
-  brideFamily: ["Bà Nguyễn Văn A"], // TODO: điền họ tên đầy đủ của mẹ cô dâu
+  brideFamily: ["Bà Nguyễn Thị Thanh Thủy"], // TODO: điền họ tên đầy đủ của mẹ cô dâu
 
   ceremony: {
     title: "Lễ Vu Quy",
