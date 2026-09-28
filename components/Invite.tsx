@@ -1098,32 +1098,9 @@ export default function Invite({
         <span className="h-px flex-1 bg-linear-to-r from-accent/40 to-transparent" />
       </div>
       <section className="px-6 pb-16">
-        {/* Lễ Vu Quy (nhà gái đứng mời) → cô dâu bên trái, đọc trước */}
+        {/* Lễ Báo Hỷ (nhà trai đứng mời) → chú rể bên trái, đọc trước */}
         <div className="grid grid-cols-2 gap-x-4">
           <Reveal className="text-center">
-            <p className="text-xs font-medium tracking-[0.3em] text-accent uppercase">
-              Nhà gái
-            </p>
-            {/* min-h giữ hai cột thẳng hàng khi số dòng tên bố mẹ lệch nhau */}
-            <div className="mt-2 min-h-10 space-y-0.5">
-              {WEDDING.brideFamily.map((name) => (
-                <p key={name} className="text-sm leading-5">{name}</p>
-              ))}
-            </div>
-            <p className="mt-4 text-xs tracking-[0.25em] text-muted uppercase">Cô dâu</p>
-            <p className="mt-1.5 font-script text-3xl whitespace-nowrap">{WEDDING.bride}</p>
-            <figure className="relative mt-5 aspect-3/4 overflow-hidden rounded-xl">
-              <Image
-                src="/assets/gallery/IMG_4961.jpg"
-                alt={`Cô dâu ${WEDDING.bride}`}
-                fill
-                sizes="180px"
-                className="object-cover object-top"
-              />
-            </figure>
-          </Reveal>
-
-          <Reveal className="text-center" delay={120}>
             <p className="text-xs font-medium tracking-[0.3em] text-accent uppercase">
               Nhà trai
             </p>
@@ -1142,6 +1119,29 @@ export default function Invite({
                 sizes="360px"
                 /* ảnh gốc full-body: zoom bán thân, origin 30% để đỉnh đầu ngang với ảnh cô dâu */
                 className="origin-[50%_30%] scale-160 object-cover object-top"
+              />
+            </figure>
+          </Reveal>
+
+          <Reveal className="text-center" delay={120}>
+            <p className="text-xs font-medium tracking-[0.3em] text-accent uppercase">
+              Nhà gái
+            </p>
+            {/* min-h giữ hai cột thẳng hàng khi số dòng tên bố mẹ lệch nhau */}
+            <div className="mt-2 min-h-10 space-y-0.5">
+              {WEDDING.brideFamily.map((name) => (
+                <p key={name} className="text-sm leading-5">{name}</p>
+              ))}
+            </div>
+            <p className="mt-4 text-xs tracking-[0.25em] text-muted uppercase">Cô dâu</p>
+            <p className="mt-1.5 font-script text-3xl whitespace-nowrap">{WEDDING.bride}</p>
+            <figure className="relative mt-5 aspect-3/4 overflow-hidden rounded-xl">
+              <Image
+                src="/assets/gallery/IMG_4961.jpg"
+                alt={`Cô dâu ${WEDDING.bride}`}
+                fill
+                sizes="180px"
+                className="object-cover object-top"
               />
             </figure>
           </Reveal>
@@ -1192,7 +1192,7 @@ export default function Invite({
           <p className="text-sm tracking-[0.3em] text-muted uppercase">
             Tham gia tiệc mừng
           </p>
-          <p className="mt-3 font-script text-5xl text-accent">Vu Quy</p>
+          <p className="mt-3 font-script text-5xl text-accent">Báo Hỷ</p>
 
           <div className="mx-auto mt-8 grid max-w-90 grid-cols-[1fr_auto_1fr] items-center">
             <p className="font-display font-semibold text-3xl text-accent">{WEDDING.ceremony.hour}</p>
@@ -1334,10 +1334,10 @@ export default function Invite({
                 Thông tin hôn lễ
               </p>
               <h3 className="mt-3 font-display text-4xl">{WEDDING.ceremony.title}</h3>
-              <p className="mt-2 text-base text-muted">
+              {/* <p className="mt-2 text-base text-muted">
                 {WEDDING.ceremony.side}:{" "}
                 <span className="font-medium text-ink">{WEDDING.ceremony.hosts}</span>
-              </p>
+              </p> */}
 
               <div className="mt-7 flex items-center gap-3">
                 <span className="h-px flex-1 bg-linear-to-l from-accent/40 to-transparent" />
@@ -1347,9 +1347,13 @@ export default function Invite({
               <p className="mt-4 font-display text-[3.25rem] leading-none text-accent">
                 {WEDDING.ceremony.hour}
               </p>
+              <p className="mt-3 text-base text-muted">
+                Đón khách: <span className="font-medium text-ink">{WEDDING.ceremony.reception}</span>
+              </p>
               <p className="mt-3 font-display text-xl italic">{WEDDING.dateFull}</p>
 
-              <p className="mt-6 text-base font-medium">{WEDDING.ceremony.venue}</p>
+              <p className="mt-6 text-xl font-semibold">{WEDDING.ceremony.venue}</p>
+              <p className="mt-1 text-lg">{WEDDING.ceremony.hall}</p>
               <p className="mt-1 text-base leading-relaxed text-muted">
                 {WEDDING.ceremony.address}
               </p>
