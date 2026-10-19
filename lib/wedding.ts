@@ -25,11 +25,11 @@ export const WEDDING = {
     title: "Lễ Báo Hỷ",
     side: "Nhà trai",
     hosts: "Ông Phạm Dân & Bà Lê Thị Hiền",
-    reception: "17:00", // giờ đón khách
+    reception: "17:30", // giờ đón khách
     hour: "19:00", // giờ làm lễ — đếm ngược tính theo giờ này
     venue: "Huong Pho Restaurant",
     hall: "Lầu 1 - Sảnh A",
-    address: "Gò Vấp, TP. Hồ Chí Minh", // TODO: địa chỉ đầy đủ nhà hàng
+    address: "A12 Đ. Phan Văn Trị, Hạnh Thông, Hồ Chí Minh", // TODO: địa chỉ đầy đủ nhà hàng
   },
 
   /* Hộp mừng cưới online — đổi enabled: true là section tự hiện.
